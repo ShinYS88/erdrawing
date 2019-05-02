@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<!-- 전체 사용자 조회 -->
+	<select id="getAllMember" resultType="memberVo">
+		select * from member
+	</select>
+
+	<!-- 특정 사용자 조회 -->
+	<select id="selectMember" resultType="memberVo" parameterType="String">
+		select * from member
+		where memId = #{memId}
+	</select>
+
+	<insert id="insertMember" parameterType="memberVo">
+
+		insert into member (
+				memid,
+				mememail,
+				mempass,
+				memcancelflag,
+				memimg,
+				memauth,
+				memnm,
+				memintro,
+				memlang,
+				memtel,
+				memperiod,
+				memindt,
+				memblackflag,
+				memEmailDiv
+		) values (
+				#{memId},
+				#{memEmail},
+				#{memPass},
+				'F',
+				#{memImg, jdbcType=VARCHAR},
+				'F',
+				#{memNm},
+				#{memIntro, jdbcType=VARCHAR},
+				#{memLang},
+				#{memTel, jdbcType=VARCHAR},
+				#{memPeriod, jdbcType=VARCHAR},
+				sysdate,
+				'F',
+				#{memEmailDiv, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 회원 자동검색 -->
+	<select id="getAutoFindMem" parameterType="String" resultType="memberVo">
+		select *
+		from member
+		where memid like '%'||#{memId}||'%'
+	</select>
+	
+	<update id="updateMemPw" parameterType="memberVo">
+	update member
+	 set mempass = #{memPass}
+	 where memId = #{memId}
+	</update>
+	
+		<!-- 회원 id검색 -->
+	<select id="getMemId" parameterType="memberVo" resultType="memberVo" >
+		select *
+		from member
+		where memNm like '%'||#{memNm}||'%' and
+			 memTel =#{memTel}
+	</select>
+	
+	<!-- 회원별 알림 조회 -->
+	<select id="getAllMsg" parameterType="String" resultType="messageVo">
+		select *
+		from message
+		where receiverid = #{receiverId}
+		order by senddt desc
+	</select>
+	
+	<!-- 단체알림 전송-->
+	<insert id="insertMsg" parameterType="java.util.Map">
+		insert into message(msgno, senderid, senddt, receiverid, msgcontent, msgtype, teamno)
+		select seq_msgno.nextval, A.* 
+		from(
+		<foreach item="item" collection="memList" separator="UNION ALL">
+			select 
+				#{item.senderId} as senderid,
+				sysdate as senddt,
+				#{item.receiverId} as receiverid,
+				#{item.msgContent} as msgcontent,
+				#{item.msgType} as msgtype,
+				#{item.teamNo} as teamno
+			from dual
+		</foreach>
+		) A
+	</insert>
+	
+	 <!-- <insert id="insertMsg" parameterType="java.util.Map">
+		insert all
+		<foreach collection="memList" item="item" separator=" ">
+			into message 
+				(msgno, senderid, senddt, receiverid, msgcontent, msgtype)
+			values 
+				(seq_msgno.nextval, #{item.senderId}, sysdate, #{item.receiverId}, #{item.msgContent}, 'n')
+		</foreach>
+		select * from dual
+	</insert> -->
+	
+	<!-- 회신 알림 전송-->
+	<insert id="insertAplyMsg" parameterType="messageVo">
+		insert into message 
+			(msgno, senderid, senddt, receiverid, msgcontent, msgtype, teamno)
+		values 
+			(seq_msgno.nextval, #{senderId}, sysdate, #{receiverId}, #{msgContent}, #{msgType}, #{teamNo})
+	</insert>
+	
+	<!-- 알림 삭제 -->
+	<delete id="delMsg" parameterType="int">
+		delete from message
+        where msgno = #{msgNo}
+	</delete>
+
+	<!-- 알림 전체 삭제 -->
+	<delete id="delMsgAll" parameterType="String">
+		delete from message
+		where receiverid = #{receiverId}
+	</delete>
+	
+	<!-- 알림 페이징 -->
+	<select id="msgPagingList" parameterType="pageVo" resultType="messageVo">
+		select *
+		from
+			(select a.*, rownum rn
+			 from
+				(select message.*
+				 from message
+				 order by msgno desc) a
+			 where receiverid = #{receiverId})
+		where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	</select>
+	
+	<!-- 알림 갯수 -->
+	<select id="getMsgCnt" parameterType="String" resultType="int">
+		select count(*)
+		from message
+		where receiverid = #{receiverId}
+	</select>
+	
+	
+		
+
+	<select id="selectMemPagingList" parameterType="pageVo"
+		resultType="memberVo">
+
+		select *
+			from
+				( select a.*, rownum rn
+				from
+					(select member.*
+						from member
+						order by memId) a
+			where memauth='F')
+		where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	</select>
+
+	<select id="getMemCnt" resultType="int">
+		select count(*)
+			from member
+		where memauth='F'
+	</select>
+
+	<update id="updateMemberDel" parameterType="memberVo">
+		update member
+		set memCancelFlag =#{memCancelFlag}
+		where memId = #{memId}
+	</update>
+	
+	<update id="updateMemberInfo" parameterType="memberVo">
+	update member
+		set mememail =#{memEmail, jdbcType=VARCHAR},
+			memPass =#{memPass, jdbcType=VARCHAR},
+			memCancelFlag =#{memCancelFlag, jdbcType=VARCHAR},
+			memImg =#{memImg, jdbcType=VARCHAR},
+			
+			memNm =#{memNm, jdbcType=VARCHAR},
+			memIntro =#{memIntro, jdbcType=VARCHAR},
+			memTel =#{memTel, jdbcType=VARCHAR},
+			memPeriod =#{memPeriod, jdbcType=VARCHAR},
+			memBlackFlag =#{memBlackFlag, jdbcType=VARCHAR}
+		where memId =#{memId}
+	</update>
+	
+</mapper>

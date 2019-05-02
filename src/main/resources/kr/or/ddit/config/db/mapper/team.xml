@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team">
+	<!-- 회원의 팀 리스트 가져오기-->
+	<select id="getTeamAllList" parameterType="String" resultType="teamListVo">
+		select *
+		from team_list
+		where memid = #{memId} 
+	</select>
+	
+	<!-- 팀 정보 가져오기 -->
+	<select id="getTeamInfo" parameterType="int" resultType="teamVo">
+		select *
+		from team
+		where teamno = #{teamNo}
+	</select>
+	
+	<!-- 태그가 없을 경우에만 태그 insert -->
+	<insert id="insertTag" parameterType="tagVo">
+		merge into tag
+		using dual
+		on (tagcontent=#{tagContent})
+		when not matched then
+		insert (tagno, tagcontent, tagindt, tagmaker)
+		values (seq_tagno.nextval, #{tagContent}, sysdate, #{tagMaker})
+	</insert>
+	
+	<!-- 태그 번호 가져오기 -->
+	<select id="getTagNo" parameterType="String" resultType="int">
+		select tagno
+		from tag
+		where tagcontent = #{tagContent}
+	</select>
+	
+	<!-- erd와 tag 맵핑 -->
+	<insert id="insertTagHist" parameterType="tagHistVo">
+		insert into tag_hist
+		(erdno, tagno, tagdt)
+		values (#{erdNo}, #{tagNo}, sysdate)
+	</insert>
+	
+	<!-- erd에 해당하는 tag 가져오기 -->
+	<select id="getErdTag" parameterType="int" resultType="tagVo">
+		select *
+		from tag_hist a, tag b
+		where a.tagno = b.tagno 
+			and a.erdNo = #{erdNo}
+	</select>
+	
+	<!-- 팀 생성 -->
+	<insert id="insertTeam" parameterType="teamVo">
+		<selectKey keyProperty="teamNo" resultType="int" order="BEFORE">
+   			 select seq_teamno.nextval FROM DUAL
+  		</selectKey>
+		insert into team
+		(teamno,teamnm,teamintro,teamimg,makerid)
+		values(#{teamNo},#{teamNm},#{teamIntro, jdbcType=VARCHAR}, #{teamImg,jdbcType=VARCHAR}, #{makerId})
+	</insert>
+	
+	<!-- team Erd 가져오기 -->
+	<select id="getTeamErdList" parameterType="int" resultType="erdVo">
+		select *
+		from erd
+		where teamno= #{teamNo}
+	</select>
+	
+	<!-- teamMember 추가 -->
+	<insert id="insertTeamMember" parameterType="teamListVo">
+		merge into team_list
+		using dual
+		on (memid = #{memId} and teamno = #{teamNo})
+		when not matched then
+			insert
+			(memid, teamno, teamauth, teamagreeflag)
+			values
+			(#{memId}, #{teamNo}, nvl(#{teamAuth,jdbcType=VARCHAR}, 'user'), nvl(#{teamAgreeFlag,jdbcType=VARCHAR},'n'))
+	</insert>
+	
+	<!-- 팀 내역 가져오기 (팀번호로) -->
+	<select id="getTeamAllListTeamNo" parameterType="int" resultType="teamListVo">
+		select *
+		from team_list
+		where teamno = #{teamNo}
+			and teamagreeflag='y'
+		order by decode(teamauth, 'creator', '1' ,  'admin', '2', '3')	
+	</select>
+	
+	<!-- 팀 멤버 및 정보 가져오기 -->
+	<select id="getTeamMember" parameterType="int" resultType="MemberVo">
+		select *
+		from team_list a, member b
+		where a.memid = b.memid
+		    and a.teamno = #{teamNo}
+		    and a.teamagreeflag='y'
+		order by decode(a.teamauth, 'creator', '1' ,  'admin', '2', '3') 
+	</select>
+	
+		<!-- select *
+		from team_list a, member b
+		where a.memid = b.memid
+		    and a.teamno = 1061
+		    and a.teamagreeflag='y'
+		order by 
+        case 
+			when a.teamauth = 'creator' then 1 
+			when a.teamauth = 'admin' then 2
+			else 3 
+		end -->
+	
+	<!-- 팀 멤버 권한 수정하기 -->
+	<update id="authUpdate" parameterType="teamListVo">
+		update team_list 
+		<set>
+	      <if test="teamAuth == 'user'">teamauth='admin'</if>
+	      <if test="teamAuth == 'admin'">teamauth='user'</if>
+     	</set>
+		where memid=#{memId} and teamno = #{teamNo}
+	</update>
+	
+	<!-- 팀 멤버 삭제 -->
+	<delete id="delMember" parameterType="teamListVo">
+		delete from team_list
+		where memid=#{memId} and teamno =#{teamNo}
+	</delete>
+	
+	<!-- 팀 수락여부 수정하기 -->
+	<update id="updateAgreeFlag" parameterType="teamListVo">
+	  update team_list
+	  set teamagreeflag = #{teamAgreeFlag}
+	  where memid = #{memId} and teamno= #{teamNo}
+	</update>
+	
+	<!-- 팀 수정 -->
+	<update id="teamModify" parameterType="teamVo">
+	  update team
+	  set 
+	  	teamnm = #{teamNm},
+	  	teamintro = #{teamIntro, jdbcType=VARCHAR}, 
+	  	teamimg = #{teamImg,jdbcType=VARCHAR}
+	  where teamno= #{teamNo}
+	</update>
+	
+	<!-- 팀 삭제 -->
+	<delete id="teamDel" parameterType="int">
+		delete from team
+		where teamno = #{teamNo}
+	</delete>
+	
+	<!-- 팀 멤버 아이디 리스트(정보X) -->
+	<select id="getTeamMemList" parameterType="int" resultType="teamListVo">
+		select *
+		from team_list
+		where teamno = #{teamNo}
+	</select>
+	
+	<!-- tag 삭제 -->
+	<delete id="delTag" parameterType="int">
+		delete from tag_hist
+		where erdno = #{erdNo}
+	</delete>
+</mapper>

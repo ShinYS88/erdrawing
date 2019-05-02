@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticket">
+	
+	<!--전체 티겟 검색  -->
+	<select id="getAllTicketList" resultType="ticketVo">
+	select * 
+	 from ticket
+	 order by ticketNo
+	</select>
+	
+	<!-- 특정 티켓 검색 -->
+	<select id="selectTicket" resultType="ticketVo" parameterType="String">
+		select * 
+	 		from ticket
+		  where ticketNo=#{ticketNo}
+	 </select>
+	 
+	 <!-- 티켓정보 수정 -->
+	 <update id="updateTicket" parameterType="ticketVo">
+	 	update ticket
+	 		set ticketPrice =#{ticketPrice, jdbcType=VARCHAR},
+	 			ticketImg =#{ticketImg, jdbcType=VARCHAR},
+	 			ticketContent=#{ticketContent, jdbcType=VARCHAR}
+	 	where ticketNo=#{ticketNo}
+	 </update>
+	 
+	 <!-- 티켓 삭제  -->
+	 <delete id="deleteTicket" parameterType="String">
+	 	delete ticket 
+	 	where ticketNo=#{ticketNo}  
+	 </delete>
+	 
+	 <!-- 티켓 추가  -->
+	 <insert id="insertTicket" parameterType="ticketVo">
+	 	insert into 
+	 	ticket ( ticketno,
+			     ticketprice,
+				 ticketimg,
+				 ticketcontent,
+				 ticketindt,
+				 ticketPeriod
+	 	) 
+	 	values(seq_ticketno.nextval,
+	 		   nvl(#{ticketPrice,jdbcType=VARCHAR}, '0'),
+	 		   #{ticketImg,jdbcType=VARCHAR},
+	 		   #{ticketContent,jdbcType=VARCHAR}, 
+	 		   sysdate,
+	 		   nvl(#{ticketPeriod,jdbcType=VARCHAR}, '0')) 
+	 		   
+	 </insert>
+	 	
+	 <select id="selectTicketHist" resultType="ticketBuyHistVo" parameterType="java.util.Map">
+		select *
+			from ticket_buy_hist
+			where
+			<if test="ticketNo != null">
+				ticketNo=#{ticketNo} and
+			</if>
+				ticketBuyDt <![CDATA[ >= ]]> #{startDt} and
+				ticketBuyDt <![CDATA[ < ]]>	#{endDt}
+	 </select>
+	 
+	 <select id="selectTicketMonthList" parameterType="java.util.Map" resultType="ticketBuyHistVo">
+		select to_char(ticketBuyDt,'mm')as ticketMonDt ,
+		       sum(ticketFee) as ticketFee from ticket_buy_hist 
+		where to_char(ticketBuyDt,'yyyy') like #{yyyy} || '%'
+		and ticketNo = #{ticketNo}  
+		 group by to_char(ticketBuyDt,'mm')
+		order by ticketMonDt asc
+	 
+	 </select>
+	 
+	 <select id="selectTicketYearList" resultType="ticketBuyHistVo" parameterType="String">
+	   select ticketMonDt, sum(fee)as TICKETFEE
+   	 from  (select distinct(ticketMonDt) as ticketMonDt,
+         case when ticketMonDts = ticketMonDt then TICKETFEE else 0 end as fee                
+               from (select to_char(TICKETBUYDT,'YYYYMM')as ticketMonDts ,
+                                sum(TICKETFEE) as TICKETFEE
+                       from TICKET_BUY_HIST 
+                      where  TICKETBUYDT <![CDATA[ > ]]> to_char(trunc(add_months(sysdate, -12), 'dd'),'yyyymmdd')
+                        and ticketNo=#{ticketNo}
+                       group by to_char(TICKETBUYDT,'YYYYMM')
+                       order by ticketMonDts) a, 
+                       (select to_char(add_months(sysdate,-(level-1)),'yyyyMM') as ticketMonDt
+                          from dual
+                       connect by level <![CDATA[ <= ]]> 12) b 
+                order by ticketMonDt)
+                  group by ticketMonDt
+                order by ticketMonDt
+	 </select>
+	 
+  <insert id="insertticketBuyHist" parameterType="ticketBuyHistVo">
+     insert into 
+        TICKET_BUY_HIST  (TICKETBUYNO, TICKETNO, MEMID, TICKETBUYDT, TICKETFEE)
+       values (seq_ticketbuyno.nextval, #{ticketNo},#{memId},sysdate,#{ticketFee})
+     </insert>
+     
+     
+    	 <select id="selectTicketYearPieList" resultType="ticketBuyHistVo" parameterType="java.util.Map">
+	   select ticketMonDt, sum(fee) as TICKETFEE
+   	 from  (select distinct(ticketMonDt) as ticketMonDt,
+         case when ticketMonDts = ticketMonDt then TICKETFEE else 0 end as fee                
+               from (select to_char(TICKETBUYDT,'YYYYMM')as ticketMonDts ,
+                                sum(TICKETFEE) as TICKETFEE
+                       from TICKET_BUY_HIST 
+                      where  to_char(TICKETBUYDT,'yyyy') like 	#{yyyy}||'%'
+                        and ticketNo=#{ticketNo}
+                       group by to_char(TICKETBUYDT,'YYYYMM')
+                       order by ticketMonDts) a, 
+                       (select to_char(add_months(#{yyyyMMdd},+(level-1)),'yyyyMM') as ticketMonDt
+                          from dual
+                       connect by level<![CDATA[ <= ]]> 12) b 
+                order by ticketMonDt)
+                  group by ticketMonDt
+                order by ticketMonDt
+	 </select> 
+	 
+	 <select id="getAllTicketRefListCnt" resultType="int" >
+    select count(*)
+       from (select a.*,rownum rn         
+               from (select a.ticketbuyno,a.ticketno,a.memid,a.ticketbuydt,a.ticketfee,b.account,b.refundreqdt,b.banknm,b.refund_respdt,b.accountholder,to_char(c.ticketcontent) as ticketcontent
+                       from TICKET_BUY_HIST  a, TICKET_REF_HIST b, TICKET c
+                      where a.TICKETBUYNO = b.TICKETBUYNO and
+                            a.TICKETNo = c.TICKETNO
+                      order by b.refundreqdt desc) a) a
+	 </select>
+	 
+	 <select id="getAllTicketRefList" resultType="Map" parameterType="Map">
+ 	   with t as (select a.*,rownum rn
+               from (select a.ticketbuyno,a.ticketno,a.memid,a.ticketbuydt,a.ticketfee,b.account,b.refundreqdt,b.banknm,b.refund_respdt,b.accountholder,to_char(c.ticketcontent) as ticketcontent
+                       from TICKET_BUY_HIST  a, TICKET_REF_HIST b, TICKET c
+                      where  0 = 0  and
+                      		<if test="inputstart != null">
+   							  b.refundreqdt between #{inputstart} and #{inputend} and
+  							</if>
+  							<if test="memId != null">
+   							   a.memid  like '%'||#{memId}||'%' and 
+  							</if>
+  							<if test="ticketNo != null">
+   							   a.ticketno = #{ticketNo} and 
+  							</if>
+  							<if test="cknullOk != null">
+   							   b.refund_respdt is null and
+  							</if>
+  							<if test="cknullNo != null">
+   							   b.refund_respdt is not null and
+  							</if>
+                            a.TICKETBUYNO = b.TICKETBUYNO and
+                            a.TICKETNo = c.TICKETNO
+                      order by b.refundreqdt desc) a
+                      )                  
+   
+    select a.*,to_char(b.cnt) as cnt
+  from  t a, (select count(*) cnt
+               from t) b  
+          where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	 </select>
+	 
+	  <select id="selectTicketBuyHist" resultType="Map" parameterType="String">
+		    		select a.TICKETBUYNO, a.TICKETNO, a.MEMID, to_char(a.TICKETBUYDT,'yyyy-MM-dd') as TICKETBUYDT, a.TICKETFEE,to_char(b.REFUNDREQDT,'yyyy-MM-dd') as REFUNDREQDT, b.ACCOUNT, b.BANKNM, b.ACCOUNTHOLDER, 
+                    to_char(b.REFUND_RESPDT,'yyyy-MM-dd') as REFUND_RESPDT, c.MEMEMAIL, c.MEMNM,c.MEMTEL, c.MEMPERIOD, c.MEMBLACKFLAG
+                from ticket_buy_hist a, TICKET_REF_HIST b ,member c
+                where a.ticketbuyNo =b.ticketbuyNo and
+                      a.memId = c.memId and
+                    a.ticketbuyNo=#{ticketbuyNo}
+	 </select>
+	 
+	 <update id="updateTicketRefDt" parameterType="String">
+	 	update TICKET_REF_HIST
+           set REFUND_RESPDT =sysdate
+         where TICKETBUYNO=#{ticketBuyNo}
+	 </update>
+	 
+	   <select id="selectMyTicketDt" resultType="Map" parameterType="String">
+		 SELECT TRUNC(SYSDATE -a.ticketbuydt) as days,to_char(a.ticketbuyDt,'yyyy-MM-dd') as ticketbuyDt,b.ticketno,
+                to_char(b.TICKETCONTENT) as TICKETCONTENT,b.TICKETPRICE,
+                CASE  WHEN  to_number(TRUNC(SYSDATE -a.ticketbuydt))>to_number(b.TICKETPERIOD) then '0'
+                      ELSE  to_char(to_number(b.TICKETPERIOD)-to_number(TRUNC(SYSDATE -a.ticketbuydt)))
+                END as "PeriodUse",
+                case  when  c.REFUND_RESPDT is null then '-'
+                      else  'O'
+                end as "REFUNDREQDT",
+                to_char(c.REFUNDREQDT,'yyyy-MM-dd') as  REFUNDaplly,
+                case when    c.REFUNDREQDT is null then '-'
+                     else  'O'
+                end as "REFUNDapllyCk",
+                to_char(c.REFUND_RESPDT,'yyyy-MM-dd') as REFUND_RESPDT, a.TICKETBUYNO
+           FROM ticket_buy_hist a, ticket  b ,ticket_ref_hist c
+          where  a.ticketno = b.ticketno and
+                 a.TICKETBUYNO = c.TICKETBUYNO(+) and
+                 a.memId = #{memId}
+          order by a.ticketbuyDt
+	 </select>
+	 
+	 <select id="selectEndDt" parameterType="String" resultType="String">
+	  select to_char(sysdate + #{addDT}) as endDt from dual
+	 </select>
+	 
+	 <select id="selectRefOkList" resultType="ticketVo" parameterType="String">
+	    select CASE  WHEN  to_number(TRUNC(SYSDATE -a.ticketbuydt))>to_number(b.TICKETPERIOD) then '0'
+               ELSE  to_char(to_number(b.TICKETPERIOD)-to_number(TRUNC(SYSDATE -a.ticketbuydt)))
+               END as "TICKETPERIOD"
+          from ticket_ref_hist c, ticket_buy_hist a ,ticket b
+         where c.ticketbuyno=a.ticketbuyno and
+               a.ticketno = b.ticketno and
+               c.REFUND_RESPDT is not null and
+                   a.memId=#{memId}
+	 </select>
+	 
+	 <insert id="insertTicketRef" parameterType="ticketRefHistVo">
+	 INSERT INTO TICKET_REF_HIST (TICKETBUYNO, REFUNDREQDT, ACCOUNT, BANKNM, ACCOUNTHOLDER) 
+	 VALUES (#{ticketBuyNo}, sysdate, #{account}, #{bankNm}, #{accountHolder})
+	 </insert>
+	 
+	 <select id="selectTicketBuyList" resultType="Map" parameterType="String">
+	    select a.TICKETBUYNO, a.MEMID, to_char(a.TICKETBUYDT,'yyyy-MM-dd') as TICKETBUYDT, a.TICKETFEE,
+                            b.TICKETNO, b.TICKETPRICE, to_char(b.TICKETCONTENT) as TICKETCONTENT,b.TICKETPERIOD
+                    from ticket_buy_Hist a,ticket b
+                    where a.ticketbuyno=#{ticketBuyNo} and
+                            a.ticketno=b.ticketno
+	 </select>
+	 
+	 
+</mapper>

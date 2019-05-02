@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+       
+	<tiles-definitions>
+
+        <definition name="layoutMain" template="/WEB-INF/views/template/layoutMain.jsp" >
+        	<put-attribute name="head" value="/WEB-INF/views/template/head.jsp" />
+        	<put-attribute name="header" value="/WEB-INF/views/template/header.jsp" />
+        	<put-attribute name="footer" value="/WEB-INF/views/template/footer.jsp" />
+        	<put-attribute name="module" value="/WEB-INF/views/template/module.jsp" />
+        	
+        	<put-attribute name="content" value="" />
+        </definition>
+        
+        
+         <definition name="layout" template="/WEB-INF/views/template/layout.jsp" >
+         	<put-attribute name="head" value="/WEB-INF/views/template/head.jsp" />
+        	<put-attribute name="header" value="/WEB-INF/views/template/header.jsp" />
+        	<put-attribute name="footer" value="/WEB-INF/views/template/footer.jsp" />
+        	<put-attribute name="module" value="/WEB-INF/views/template/module.jsp" />
+
+        	<put-attribute name="content" value="" />
+        </definition>
+        
+        
+        <definition name="layoutERD" template="/WEB-INF/views/template/layoutERD.jsp" >
+        	<put-attribute name="module" value="/WEB-INF/views/template/module.jsp" />
+        	<put-attribute name="content" value="" />
+        </definition>
+        
+        
+        <definition name="erdrawing" extends="layoutERD">
+        	<put-attribute name="content" value="/WEB-INF/views/drawing/erdDrawing_JY.jsp" />
+        </definition>
+        
+        
+        <definition name="erdrawing_shin" extends="layoutERD">
+        	<put-attribute name="content" value="/WEB-INF/views/drawing/erdDrawing_ShinYS.jsp" />
+        </definition>
+        
+        <definition name="erdrawing_base" extends="layoutERD">
+        	<put-attribute name="content" value="/WEB-INF/views/drawing/erdDrawing.jsp" />
+        </definition>
+        
+        
+        
+        
+        
+        
+        
+        
+        <definition name="main" extends="layoutMain">
+        	<put-attribute name="content" value="/WEB-INF/views/main.jsp" />
+        </definition>
+        
+        
+        
+        <definition name="test2" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/test3.jsp" />
+        </definition>
+         <definition name="testyhs" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/testyhs_minimap.jsp" />
+        </definition>
+        
+         <definition name="testline" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/lineTest.jsp" />
+        </definition>
+        
+        
+        
+        <!-- <definition name="library" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/erd/library.jsp" />
+        </definition> -->
+        <definition name="libraryScroll" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/erd/libraryScroll.jsp" />
+        </definition>
+        
+         <definition name="join" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/member/join.jsp" />
+        </definition>
+        
+        <definition name="login" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/member/login.jsp" />
+        </definition>
+        
+        <definition name="mypage" extends="layoutMain">
+        	<put-attribute name="content" value="/WEB-INF/views/member/mypage.jsp" />
+        </definition>
+        
+         <definition name="team" extends="layoutMain">
+        	<put-attribute name="content" value="/WEB-INF/views/member/team.jsp" />
+        </definition>
+        
+        
+        <definition name="modify" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/member/modify.jsp" />
+        </definition>
+        
+        <definition name="memList" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/member/memListPagingContent.jsp" />
+        </definition>
+        
+        <definition name="memberErdPage" extends="layoutMain">
+        	<put-attribute name="content" value="/WEB-INF/views/member/memberErdPage.jsp" />
+        </definition>
+
+
+        <definition name="postList" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/post/postList.jsp" />
+        </definition>
+        
+        <definition name="postInsert" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/post/postInsert.jsp" />
+        </definition>
+        
+        <definition name="postDetail" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/post/postDetail.jsp" />
+        </definition>
+        
+        <definition name="postUpdate" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/post/postUpdate.jsp" />
+        </definition>
+        
+        <definition name="postReply" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/post/postReply.jsp" />
+        </definition>
+        
+         <definition name="ticket" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/ticket/ticketList.jsp" />
+        </definition>
+        
+         <definition name="ticketChart" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/ticket/ticketChart.jsp" />
+        </definition>
+        
+         <definition name="ticketPie" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/ticket/ticketPie.jsp" />
+        </definition>
+        
+        <definition name="ticketRefList" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/ticket/ticketRefListContent.jsp" />
+        </definition>
+        
+        <definition name="myTicket" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/ticket/myTicket.jsp" />
+        </definition>
+        
+          <definition name="chatbot" extends="layout">
+        	<put-attribute name="content" value="/WEB-INF/views/chatbot/chatbot.jsp" />
+        </definition>
+        
+	</tiles-definitions>

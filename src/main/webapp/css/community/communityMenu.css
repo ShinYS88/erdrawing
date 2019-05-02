@@ -1,0 +1,41 @@
+.communityMenu{
+	position:absolute;
+	width:100%;
+	height:0px;
+	line-height:0px;
+	top:50px;
+	left:0;
+	background:#ddd;
+	font-size:14px;
+	color:#000;
+	overflow:hidden;
+}
+
+.communityMenu ul{	
+	max-width:1140px;
+	margin:0 auto;
+}
+
+.communityMenu li{
+/* opacity:0; */
+/* margin:0 20px; */
+}
+
+.communityMenu li a{
+	display:block;
+	height:50px;
+	line-height:50px;
+	padding:0 20px;
+}
+
+
+.communityMenu li a:hover{
+color:#666;
+}
+
+
+.communityHover:hover .communityMenu{
+height:50px;
+line-height:50px;
+}
+

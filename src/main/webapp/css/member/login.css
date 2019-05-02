@@ -1,0 +1,31 @@
+.submit-btn{
+	display: inline-block;
+	margin:10px 0 50px 0;
+	width:100px;
+}
+
+.member{
+	max-width:100%;
+}
+
+
+.google-btn{
+	width:100%;
+	max-width:800px;
+	margin-bottom:15px;
+	background:#E25141;
+}
+
+.facebook-btn{
+	width:100%;
+	max-width:800px;
+	margin-bottom:15px;
+	background:#4A659D;
+}
+
+.github-btn{
+	width:100%;
+	max-width:800px;
+	margin-bottom:15px;
+	background:#666666;
+}

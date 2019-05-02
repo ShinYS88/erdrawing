@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="erd">
+	<!-- erd 생성 모든 컬럼 -->
+	<insert id="addErdFull" parameterType="erdVo">
+		insert into erd
+			(erdno, erdtitle, erdscope, erdreadcnt, erdcdt, erdudt, erdcolor, memid, teamno)
+		values
+			(seq_erdno.nextval, #{erdTitle}, #{erdScope}, #{erdReadCnt}, sysdate, sysdate, #{erdColor}, #{memId}, #{teamNo})
+	</insert>
+	
+	<!-- erd 생성하기 -->
+	<insert id="addErd" parameterType="erdVo">
+		<selectKey keyProperty="erdNo" resultType="int" order="BEFORE">
+   			 select seq_erdno.nextval FROM DUAL
+  		</selectKey>
+		insert into erd
+			(erdno, erdtitle, erdscope, erdcdt, erdudt, memid, teamno, erdimg, erdreadcnt)
+		values
+			(#{erdNo}, #{erdTitle}, #{erdScope}, sysdate, sysdate, #{memId, jdbcType=VARCHAR}, nullif(#{teamNo},0), #{erdImg, jdbcType=VARCHAR}, 0)
+	</insert>
+	
+	<!-- 나의 Erd리스트 가져오기 -->
+	<select id="getMyErdList" parameterType="String" resultType="erdVo">
+		select a.*, e.likeCnt
+		from erd a, (select a.erdno, count(d.erdno) as likeCnt
+					 from erd a, erd_like d
+					 where a.erdno = d.erdno(+)
+					 group by a.erdno(+)) e
+		where a.memid = #{memId}
+			and a.erdno = e.erdno
+		order by erdudt desc
+	</select>
+	
+
+	<!-- erd 삭제 -->
+	<delete id="delErd" parameterType="int">
+		delete from erd where erdno = #{erdNo}
+	</delete>
+	
+	<!-- 모든 Erd리스트 가져오기 -->
+	<select id="getAllErdList" resultType="erdVo">
+		select a.*, e.likeCnt
+		from erd a, (select a.erdno, count(d.erdno) as likeCnt
+		            from erd a, erd_like d
+		            where a.erdno = d.erdno(+)
+		            group by a.erdno(+))e
+		where a.erdno = e.erdno            
+		order by erdudt desc
+	</select>
+	
+	<!-- 모든 ERD 리스트 (정렬 선택) -->
+	<select id="getAllErdListOrder" resultType="erdVo" parameterType="erdVo">
+		select a.*, (select count(*) from erd_like where erdno = a.erdno) as likecnt
+		from erd a
+		where a.erdscope = 'public' and rownum <![CDATA[<=]]> 6
+		<trim prefix="ORDER BY"> 
+        	<if test="orderKind == 'erdRead'">  a.erdreadcnt desc </if>
+            <if test="orderKind == 'erdLike'">  likecnt desc </if>                        
+            <if test="orderKind == ''">  a.erdudt desc </if>                        
+        </trim> 
+	</select>
+	
+	<!-- 모든 public ERD 페이징 리스트 -->
+	<select id="getAllErdListPaging" parameterType="pageVo" resultType="erdVo">
+		select *
+		from
+			( select b.*, rownum rn
+		      from
+		        (select c.*, e.likecnt
+		         from erd c, (select a.erdno,
+                                count(d.erdno) as likecnt
+                                from erd a, erd_like d
+                               where a.erdno = d.erdno(+)
+                                group by a.erdno(+)) e
+		         where erdscope = 'public'
+                    and c.erdno = e.erdno
+		         order by erdudt desc
+		        ) b
+		    )
+		where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	</select>
+	
+	<!-- 모든 erd 개수 -->
+	<select id="getAllErdCnt" resultType="int">
+		select count(*)
+		from erd
+	</select>
+	
+	<!-- 검색용 public ERD 페이징 리스트 -->
+	<select id="searchPagingList" parameterType="pageVo" resultType="erdVo">
+		select e.*           
+		from (select d.*, rownum rn                
+		      from (select c.*        
+		            from(select a.*, e.likecnt
+		                 from erd a , (select a.erdno, count(d.erdno) as likecnt
+                                       from erd a, erd_like d
+                                       where a.erdno = d.erdno(+)
+                                       group by a.erdno(+)) e
+		                 where 
+                            a.erdno = e.erdno
+		                    and erdtitle like '%'||#{search}||'%'
+		                    and a.erdscope = 'public'    
+		            union 
+		                select a.*,e.likecnt
+		                from erd a, tag b ,tag_hist c, (select a.erdno, count(d.erdno) as likecnt
+                                                        from erd a, erd_like d
+                                                        where a.erdno = d.erdno(+)
+                                                        group by a.erdno(+)) e
+		                where a.erdno = c.erdno
+                           and a.erdno = e.erdno
+		                    and b.tagno = c.tagno
+		                    and b.tagcontent like '%'||#{search}||'%'
+		                    and a.erdscope = 'public') c
+		      order by c.erdudt desc) d
+		      ) e
+		where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	
+	</select>
+	<!-- 검색용 public erd 리스트-->
+	<select id="searchList" parameterType="String" resultType="erdVo">
+	
+			  select d.*, rownum rn                
+		      from (select c.*        
+		            from(select a.*, e.likecnt
+		                 from erd a , (select a.erdno, count(d.erdno) as likecnt
+                                       from erd a, erd_like d
+                                       where a.erdno = d.erdno(+)
+                                       group by a.erdno(+)) e
+		                 where 
+                            a.erdno = e.erdno
+		                    and erdtitle like '%'||#{search}||'%'
+		                    and a.erdscope = 'public'    
+		            union 
+		                select a.*,e.likecnt
+		                from erd a, tag b ,tag_hist c, (select a.erdno, count(d.erdno) as likecnt
+                                                        from erd a, erd_like d
+                                                        where a.erdno = d.erdno(+)
+                                                        group by a.erdno(+)) e
+		                where a.erdno = c.erdno
+                           and a.erdno = e.erdno
+		                    and b.tagno = c.tagno
+		                    and b.tagcontent like '%'||#{search}||'%'
+		                    and a.erdscope = 'public') c
+		      order by c.erdudt desc) d
+	
+		<!-- select d.*, rownum rn                
+		      from (select c.*        
+		            from(select a.*
+		                 from erd a 
+		                 where 
+		                    erdtitle like '%'||#{search}||'%'
+		                    and a.erdscope = 'public'  erdtitle에 1이 들어있는 애들   
+		            union 
+		                select a.*
+		                from erd a, tag b ,tag_hist c
+		                where a.erdno = c.erdno
+		                    and b.tagno = c.tagno
+		                    and b.tagcontent like '%'||#{search}||'%' tag에  1이 들어있는애들
+		                    and a.erdscope = 'public') c
+		      order by c.erdudt desc) d -->
+	</select>
+	
+	<!-- erd Id로 erd 정보 조회 -->
+	<select id="getErdInfo" parameterType="int" resultType="erdVo">
+		select c.*, e.likeCnt
+		from erd c, (select a.erdno, count(d.erdno) as likeCnt
+                     from erd a, erd_like d
+                     where a.erdno = d.erdno(+)
+                     group by a.erdno(+)) e
+		where c.erdno = #{erdNo}
+        and c.erdno = e.erdno
+	</select>
+	
+	<!-- erd 조회수 증가 -->
+	<update id="updCnt" parameterType="int">
+		update erd
+		set erdreadcnt = erdreadcnt + 1
+		where erdno = #{erdNo}
+	</update>
+	
+	<!-- erd 수정 -->
+	<update id="erdUdt" parameterType="erdVo">
+		update erd 
+		set 
+			erdtitle = #{erdTitle}, 
+			erdscope = #{erdScope}, 
+			memid = #{memId, jdbcType=VARCHAR}, 
+			teamno = nullif(#{teamNo},0), 
+			erdimg = #{erdImg, jdbcType=VARCHAR}
+		where erdno = #{erdNo}
+	</update>
+	
+	<!-- erd별 좋아요 수 -->
+	<select id="erdLikeCnt" parameterType="int">
+		select count(*)
+		from erd_like
+		where erdno = #{erdNo}
+	</select>
+	
+	<!-- 좋아요 클릭 -->
+	<insert id="erdLikeClick" parameterType="erdLikeVo">
+		merge into erd_like
+		using dual
+		on (erdno = #{erdNo} and memid= #{memId})
+		when not matched then
+		    insert(erdno, memid, erdlikedt)
+		    values(#{erdNo}, #{memId}, sysdate)
+		when matched then
+		    update set erdlikedt = sysdate
+		    delete where erdno = #{erdNo} and memid= #{memId}
+	</insert>
+	
+	<!-- 좋아요 상태 조회 -->
+	<select id="getMyLikeCnt" parameterType="erdLikeVo" resultType="int">
+		select count(*)
+		from erd_like
+		where erdno = #{erdNo} and memid = #{memId}
+	</select>
+	
+	<!-- private 갯수 조회 -->
+	<select id="getPrivateCnt" parameterType="String" resultType="int">
+		select count(*)
+		from erd
+		where memid = #{memId} and erdscope = 'private'
+	</select>
+	
+</mapper>

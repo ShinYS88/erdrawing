@@ -1,0 +1,125 @@
+.message{
+	position: absolute;
+	border-radius: 5px;
+	min-width: 240px;
+	height: auto;
+	font-size: 12px;
+	border: 2px solid #707070;
+	z-index: 1000;
+	text-align: left;
+	font-weight: 400;
+	color: white;
+	line-height: 1.5;
+	background: black; 
+	right: 42px;
+}
+
+.modalms{
+	width:400px;
+}
+
+.message h1{
+	display: flex;
+    position: relative;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+    flex-direction: row;
+    background-color: #707070;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    text-align: left;
+        line-height: 1.5;
+}
+
+.message h1 .massage-title{
+	flex: 1;
+}
+.message h1 .glyphicon{
+	font-size: 20px;
+	background-color: transparent;
+	min-width: 30px;
+	min-height: 30px;
+	margin: 2px;
+}
+
+.message .msg-listBox ul{
+    display: block;
+    width: 100%;
+    border: 2px solid #303030;
+    box-sizing: border-box;
+}
+
+.message .msg-listBox .msg-items{
+	position: relative;
+/*     padding: 10px; */
+    margin: 3px;
+    width:100%!important;
+    overflow:hidden;
+/*     white-space:nowrap; */
+	padding-bottom:8px;
+	border-bottom:1px solid #444;
+}
+
+.message .msg-listBox .msg-items:last-child{
+	padding-bottom:0px;
+	border-bottom:0px;
+}
+.message .msg-listBox .msg-items a{
+	display: block;
+    margin-bottom: 10px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    background-color: transparent;
+}
+
+
+.message .msg-listBox .msg-items a .info .nd-box{
+    overflow: hidden;
+}
+
+.message .msg-listBox .msg-items a .info .userId{
+	display:inline-block;
+	
+}
+.message .msg-listBox .msg-items a .info .dateTime{
+	display:inline-block;
+}
+
+
+.btns2 .btn{
+	min-width: 40px;
+    min-height: 24px;
+    padding: 0 5px 0 5px;
+    margin: 0;
+    font-size: 12px !important;
+    line-height: 24px;
+    text-transform: capitalize;
+}
+
+.btns2 .btn:nth-child(1){
+	margin-right:5px;
+}
+
+
+.btns2{
+	margin-left:auto;
+	display:inline-block;
+	width:47%;
+	text-align:right;
+	
+}
+
+.msg-items .info{
+	display:inline-block;
+	width:50%;
+	
+}
+
+
+
+.background-etc{
+	background:none;
+}

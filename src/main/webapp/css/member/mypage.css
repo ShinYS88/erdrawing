@@ -1,0 +1,77 @@
+.my-bg {
+	position:relative;
+	height: 250px;
+	width: 100%;
+	background: #232323;
+	color: #fff;
+	margin-bottom:50px;
+	/* background: rgba(114, 118, 124, 0.1) url('/image/ss2.png') repeat center 0px; */
+}
+
+.bg-btn{
+	background: #ffffff;
+	display:block;
+}
+
+.line-btn{
+	position:absoulte;
+	background:red;
+	right:0;
+}
+
+	.tag-a{
+	    margin: 3px;
+	    padding: 3px;
+	    background-color: #444444;
+	    font-size: 11px;
+	}
+
+.my-bg::before{
+	position:absolute;
+	content:"";
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	display:block;
+	opacity:0.1;
+	background: rgba(114, 118, 124, 0.1) url('/image/ss1.png') repeat center 0px;
+	background-size: 30px 30px;
+}
+
+
+.profile-info{
+	position:absolute;
+	left:50%;
+	bottom:-145px;
+	transform:translate(-50%, -50%);
+}
+
+.sampleImg{
+	width:100px;
+	margin:0 auto;
+}
+
+.exText{
+	height:100px;
+}
+
+.exText img{
+	width:100%;
+	height:100%;
+}
+
+
+.memberId{
+	color:#D4C494;
+	font-size:36px;
+	text-align:center;
+	font-weight:600;
+}
+
+.memberEmail{
+	font-size:16px;
+	text-align:center;
+	font-weight:600;
+	margin:7px 0 15px 0;
+}

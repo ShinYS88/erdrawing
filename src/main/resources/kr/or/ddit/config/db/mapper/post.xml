@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<!-- Board -->
+	<!-- 게시판 전체 조회 -->
+	<select id="getAllBoard" resultType="boardVo">
+		select *
+		from board
+	</select>
+
+	<!-- 특정 게시판 조회 -->
+	<select id="getSelectBoard" resultType="boardVo" parameterType="String">
+		select *
+		from board
+		where boardNo = #{boardNo}
+	</select>
+
+	<!-- 게시판 이름 조회 -->
+	<select parameterType="String" resultType="String" id="getSelectBoardNm">
+		select boardNm from board where boardNo = #{boardNo}
+	</select>
+
+	<!-- Post -->
+	<!-- 게시글 전체 조회 -->
+	<select id="getAllPost" resultType="postVo" parameterType="String">
+		select *
+		from post
+		where boardNo = #{boardNo}
+		ORDER BY postRegDt DESC
+	</select>
+	
+
+	<!-- 특정 게시글 조회 -->
+	<select id="getSelectPost" resultType="postVo" parameterType="String">
+		select /*+INDEX(post PK_POST)*/ *
+		from post
+		where postNo = #{postNo}
+	</select>
+
+	<!-- 게시글 페이징 조회 -->
+	<select id="selectPostPagingList" parameterType="pageVo" resultType="postVo">
+		select *
+		    from 
+		        (select a.POSTNO,
+		                a.POSTREGDT,
+		                a.POSTGN,
+		                a.POSTDELFLAG,
+		                a.BOARDNO,
+		                a.WRITERID,
+		                a.VIEWCNT,
+		                a.lv as "level",
+		                DECODE( a.COMMENTS_CNT, 0, a.POSTTITLE, a.POSTTITLE || ' (' || a.COMMENTS_CNT || ')' ) AS POSTTITLE, rownum rn 
+		         from 
+		            (select POSTNO, POSTTITLE, POSTGN,
+		             BOARDNO, WRITERID,trim(POSTDELFLAG) as
+		             POSTDELFLAG, POSTREGDT, VIEWCNT, level as lv, ( SELECT COUNT(*) FROM COMMENTS WHERE POSTNO = P.POSTNO ) AS COMMENTS_CNT
+		FROM post P where BOARDNO = #{boardNo}
+		START WITH parentPostNo IS NULL
+		CONNECT BY parentPostNo = prior
+		POSTNO order SIBLINGS By POSTGN desc,
+		POSTNO) a) a where rn between
+		((#{pageNo}-1)*10)+1 and (#{pageNo})*10
+	</select>
+		
+	<!-- 게시글 페이징 조회 -->
+	<select id="selectNoticePagingList" parameterType="pageVo" resultType="postVo">
+		select *
+			from 
+				(select a.POSTNO,
+		                a.POSTREGDT,
+		                a.POSTGN,
+		                a.POSTDELFLAG,
+		                a.BOARDNO,
+		                a.WRITERID,
+		                a.VIEWCNT,
+						a.lv as "level",
+		                DECODE( a.COMMENTS_CNT, 0, a.POSTTITLE, a.POSTTITLE || ' (' || a.COMMENTS_CNT || ')' ) AS POSTTITLE, rownum rn
+				 from 
+				 	(select POSTNO, POSTTITLE, POSTGN,
+			  		 BOARDNO, WRITERID,trim(POSTDELFLAG) as
+		             POSTDELFLAG, POSTREGDT, VIEWCNT, level as lv, ( SELECT COUNT(*) FROM COMMENTS WHERE POSTNO = P.POSTNO ) AS COMMENTS_CNT
+		FROM post P where BOARDNO = #{boardNo} 
+				    and postDelFlag = 'T'
+		START WITH parentPostNo IS NULL
+		CONNECT BY parentPostNo = prior
+		POSTNO order SIBLINGS By POSTGN desc,
+		POSTNO) a) a where rn between
+		((#{pageNo}-1)*10)+1 and (#{pageNo})*10
+	</select>
+
+	<!-- 전체 게시글 수 조회 -->
+	<select id="getPostCnt" resultType="Integer" parameterType="Integer">
+		select count (*)
+		from post
+		where boardNo = #{boardNo}
+	</select>
+	
+	<!-- 게시글 조회수 -->
+	<update id="getViewCnt" parameterType="String">
+		update post
+		set viewCnt = viewCnt + 1
+		where postNo = #{postNo}
+	</update>
+
+	<!-- 게시글 생성 -->
+	<insert parameterType="postVo" id="insertPost">
+		<selectKey resultType="int" order="BEFORE" keyProperty="postNo">
+			select seq_postNo.nextval from dual
+		</selectKey>
+		insert into post (postNo, postTitle, postContent, postRegDt, postDelFlag, postGn, writerId, parentPostNo, boardNo)
+		values (#{postNo}, #{postTitle}, #{postContent}, sysdate, 'T', #{postNo}, #{writerId}, '', #{boardNo})
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="postVo">
+		update post
+		set postTitle = #{postTitle},
+		postContent = #{postContent}
+		where postNo = #{postNo}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="deletePost" parameterType="String">
+		update post
+		set postDelFlag = 'F'
+		where postNo = #{postNo}
+	</delete>
+	
+	<!-- 답글 생성 -->
+	<insert parameterType="postVo" id="insertReply">
+		<selectKey resultType="int" order="BEFORE" keyProperty="postNo">
+			select seq_postNo.nextval from dual
+		</selectKey>
+		insert into post (postNo, postTitle, postContent, postRegDt, postDelFlag, postGn, writerId, parentPostNo, boardNo)
+		values (#{postNo}, #{postTitle}, #{postContent}, sysdate, 'T', #{postGn}, #{writerId}, #{parentPostNo}, #{boardNo})
+	</insert>
+	
+	<!-- UploadFile -->
+	<!-- 첨부파일 목록 조회 -->
+	<select parameterType="String" resultType="uploadFileVo" id="getAllFile">
+		select *
+		from UPLOADFILE
+		where POSTNO = #{POSTNO}
+	</select>
+
+	<!-- 첨부파일 조회 -->
+	<select parameterType="String" resultType="uploadfileVo" id="selectFile">
+		select *
+		from UPLOADFILE
+		where UPLOADFILENO = #{UPLOADFILENO}
+	</select>
+
+	<!-- 첨부파일 등록 -->
+	<insert parameterType="uploadfileVo" id="insertFile">
+		insert into UPLOADFILE (uploadFileNo, uploadFileNm, uploadRealFilePath,
+		postNo)
+		values(SEQ_UPLOADFILENO.NEXTVAL, #{uploadFileNm}, #{uploadRealFilePath}, #{postNo})
+	</insert>
+
+	<!-- 첨부파일 삭제 -->
+	<delete parameterType="String" id="deleteFile">
+		delete from UPLOADFILE
+		where uploadFileNo = #{uploadFileNo}
+	</delete>
+
+	<!-- Comments -->
+	<!-- 댓글 전체 조회 -->
+	<select id="getAllComments" resultType="commentsVo" parameterType="String">
+		SELECT 
+		    A.CMTNO,
+		    A.CMTREGDT,
+		    A.CMTCONTENT,
+		    A.CMTDELFLAG,
+		    A.POSTNO,
+		    A.MEMID,
+		    (SELECT COUNT(*) AS CNT FROM COMMENT_LIKE WHERE CMTNO = A.CMTNO) AS CNT
+		FROM COMMENTS A
+		WHERE POSTNO = #{POSTNO}
+		ORDER BY CMTREGDT DESC
+	</select>
+	
+	<!-- 04/19 수정중 -->
+	<!-- 댓글 페이징 전체 조회 -->
+	<!-- <select id="getPagingAllComments" parameterType="pageVo" resultType="commentsVo">
+		select *
+			from
+				(select a.*, rownum rn
+				from
+					(select COMMENTS.*
+						,(SELECT COUNT(*) AS CNT FROM COMMENT_LIKE WHERE CMTNO = COMMENTS.CMTNO) AS CNT
+						from COMMENTS
+						order by cmtRegDt desc 
+						) a where postNo = #{postNo})
+		where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	</select> -->
+
+	<select id="getPagingAllComments" parameterType="pageVo" resultType="commentsVo">
+	  SELECT 
+          A.CMTNO,
+          A.CMTREGDT,
+          A.CMTCONTENT,
+          A.CMTDELFLAG,
+          A.POSTNO,
+          A.MEMID,
+          A.CNT,
+          rownum,
+          'T' as "flag"
+         FROM (SELECT 
+            A.*,
+          (SELECT COUNT(*) AS CNT FROM COMMENT_LIKE WHERE CMTNO = A.CMTNO) AS CNT
+      FROM COMMENTS A
+      WHERE POSTNO = #{postNo}
+      order by CNT desc) A 
+      where rownum <![CDATA[ <= ]]> 3
+       and A.CNT <![CDATA[ >= ]]> 3
+      union all
+      select *
+      from
+            (select a.*, rownum rn,'F'
+            from
+               (select COMMENTS.*
+                  ,(SELECT COUNT(*) AS CNT FROM COMMENT_LIKE WHERE CMTNO = COMMENTS.CMTNO) AS CNT
+                  from COMMENTS
+                  order by cmtRegDt desc 
+                  ) a where postNo = #{postNo})
+	  where rn between ((#{pageNo}-1)*#{pageSize})+1 and (#{pageNo})*#{pageSize}
+	</select>
+	
+	
+	<!-- 댓글 갯수 -->
+	<select id="getCmtCnt" resultType="Integer" parameterType="Integer">
+		select count(*)
+		from comments
+		where postNo = #{postNo}
+	</select>
+
+	<!-- 댓글 특정 조회 -->
+	<select id="getSelectComments" resultType="commentsVo"
+		parameterType="String">
+		select *
+		from comments
+		where cmtNo = #{cmtNo}
+	</select>
+
+	<!-- 댓글 생성 -->
+	<insert id="insertComments" parameterType="commentsVo">
+		insert into comments
+		(cmtNo, cmtContent, cmtRegDt, cmtDelFlag, memId, postNo)
+		values (seq_cmtNo.nextval, #{cmtContent}, sysdate, 'T', #{memId}, #{postNo})
+	</insert>
+
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComments" parameterType="String">
+		delete from comments
+		where cmtNo = #{cmtNo}
+	</delete>
+   
+	<!-- 댓글 좋아요 특정 조회 -->
+	<select id="getSelectCmtLike" resultType="commentLikeVo" parameterType="commentLikeVo">
+		select *
+		from comment_like
+		where cmtNo = #{cmtNo} and memId = #{memId}
+	</select>
+
+	<!-- 댓글 좋아요 선택(생성)  -->
+	<insert id="insertCmtLike" parameterType="commentLikeVo">
+		insert into comment_like
+		(cmtNo, memId, cmtLikeDt)
+		values (#{cmtNo}, #{memId}, sysdate)
+	</insert>
+
+	<!-- 댓글 좋아요 취소(삭제) -->
+	<delete id="deleteCmtLike" parameterType="commentLikeVo">
+		delete from comment_like
+		where cmtNo = #{cmtNo} and memId = #{memId}
+	</delete>
+	
+	
+	<!-- 게시글 신고 -->
+	<insert parameterType="reportVo" id="insertReport">
+		insert into report (fromMemId, toMemId, reportReason, reportDt)
+		values (#{fromMemId}, #{toMemId}, #{reportReason}, sysdate)
+	</insert>
+	
+	<!-- 신고 조회 -->
+    <select id="getReportCnt" parameterType="reportVo" resultType="int">
+     select count(*)
+	 from report 
+	 where toMemId =#{toMemId} and fromMemId = #{fromMemId}
+    </select>
+	
+	<!-- 신고사유 조회 -->
+    <select id="selectReport" parameterType="String" resultType="reportVo">
+    select a.* ,
+       (select count(*) from report where tomemid =a.tomemid) as cnt
+	 from report a
+	 where tomemid =#{tomemid}
+    </select>
+    
+</mapper>
+

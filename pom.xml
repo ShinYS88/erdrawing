@@ -1,0 +1,319 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>kr.or.ddit</groupId>
+  <artifactId>ERDrawing</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+  
+  
+  
+<!--   프로퍼티 설정 -->
+  <properties>
+     <java.version>1.7</java.version>
+     <spring.version>4.3.22.RELEASE</spring.version>
+  </properties>
+  
+<!--   자바 버전 설정 -->
+  <build>
+     <plugins>
+        <plugin>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <configuration>
+              <source>${java.version}</source>
+              <target>${java.version}</target>
+           </configuration>
+        </plugin>
+     </plugins>
+  </build>
+  
+  
+  
+  
+ <!-- nexus repository 어떤 회사에서 등록한 ojdbc가져오기 -->
+   <repositories>
+      <!-- ojdbc6 설정시 -->
+      <!--<repository>
+         <id>codelds</id>
+         <url>https://code.lds.org/nexus/content/groups/main-repo</url>
+      </repository>-->
+      
+      <repository>
+			<id>oracle</id>
+			<name>ORACLE JDBC Repository</name>
+			<url>http://maven.jahia.org/maven2</url>
+		</repository>
+
+
+		<repository>
+			<id>spring-repo</id>
+			<name>Spring Repository</name>
+			<url>https://repo.spring.io/release</url>
+		</repository>
+   </repositories>
+   
+   
+   
+   
+   
+   <dependencies> <!-- dependencies안에 넣으면됨. -->
+   
+   <!-- 위쪽 repositories에 등록한 ojdbc 사용하기 -->
+      <dependency>
+         <groupId>com.oracle</groupId>
+         <artifactId>ojdbc6</artifactId>
+         <version>12.1.0.2</version>
+         <scope>provided</scope>
+      </dependency>
+      
+   <!-- https://mvnrepository.com/artifact/javax. /javax.servlet-api -->
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>javax.servlet-api</artifactId>
+         <version>3.0.1</version>
+         <scope>provided</scope>
+      </dependency>
+      
+      
+      
+      
+   
+   
+   <!-- https://mvnrepository.com/artifact/junit/junit -->
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.12</version>
+         <scope>test</scope>
+      </dependency>
+      
+      
+   <!-- jsp tag추가시 -->
+   <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>jstl</artifactId>
+         <version>1.2</version>
+      </dependency>
+      
+      
+      
+   <!-- 로고 라이브러리 -->
+   <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+      <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-classic</artifactId>
+         <version>1.2.3</version>
+      </dependency>
+      
+      
+      
+<!--    스프링 추가하기 -->
+
+      <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+   
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-beans</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-webmvc</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-aop</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-orm</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-jdbc</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+
+   
+   
+   
+      <!-- 스프링 마이바티스 추가 -->
+      <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+      <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis-spring</artifactId>
+          <version>2.0.0</version>
+      </dependency>
+      
+      <!-- dbcp 톰캣외에도 연결가능하도록 -->
+      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-dbcp2</artifactId>
+          <version>2.6.0</version>
+      </dependency>
+      
+      
+      
+   
+   
+      <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+      <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis</artifactId>
+          <version>3.5.0</version>
+          <scope>compile</scope> 
+          
+          <!-- scope default : compile
+             maven build 과정 : compile -> test -> build -> deploy -> 
+          
+             1. test : test 과정까지만 필요한 dependency (ex: junit)
+             2. compile : 배포까지 dependency 유지 (가장 일반적인 형태)
+             3. provided : 운영환경에서 제공되기때문에 배포할 필요는 없는 dependency
+             4. system : mvn central repository에서 모든 lib를 제공하지 않기 때문에
+                  사설 저장소 만들기(nexus - https://www.sonatype.com/nexus-repository-sonatype)
+           -->
+          
+      </dependency>
+      
+      
+      
+      <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+      <dependency>
+          <groupId>commons-fileupload</groupId>
+          <artifactId>commons-fileupload</artifactId>
+          <version>1.4</version>
+      </dependency>
+
+      
+      
+      
+      
+      <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-validator</artifactId>
+          <version>5.1.3.Final</version>
+      </dependency>
+
+
+
+      <!-- 웹 소켓 -->
+      
+      <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-websocket</artifactId>
+           <version>4.2.4.RELEASE</version>
+      </dependency>
+      
+      <!-- 스프링 웹소캣에 http세션을 가져오기위해 추가 -->
+      <dependency>
+         <groupId>javax.websocket</groupId>
+         <artifactId>javax.websocket-api</artifactId>
+         <version>1.1</version>
+      </dependency>
+
+
+      <!-- json -->
+      <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.9.8</version>
+      </dependency>
+
+
+
+<!-- tiles 3개 -->
+      <!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-servlet -->
+      <dependency>
+          <groupId>org.apache.tiles</groupId>
+          <artifactId>tiles-servlet</artifactId>
+          <version>3.0.8</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.apache.tiles</groupId>
+          <artifactId>tiles-jsp</artifactId>
+          <version>3.0.8</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.apache.tiles</groupId>
+          <artifactId>tiles-extras</artifactId>
+          <version>3.0.8</version>
+      </dependency>
+         
+
+      <!-- AOP추가 라이브러리 -->
+      <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+      <dependency>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjweaver</artifactId>
+          <version>1.9.2</version>
+      </dependency>
+      <!-- mail -->
+  <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+      
+      <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+      <dependency>
+          <groupId>com.googlecode.json-simple</groupId>
+          <artifactId>json-simple</artifactId>
+          <version>1.1.1</version>
+      </dependency>
+      
+      <!-- 챗봇 -->
+      <dependency>
+  		<groupId>com.ibm.watson.developer_cloud</groupId>
+		<artifactId>java-sdk</artifactId>
+  		<version>6.14.0</version>
+	</dependency>
+   
+       
+   </dependencies>
+   
+   
+</project>

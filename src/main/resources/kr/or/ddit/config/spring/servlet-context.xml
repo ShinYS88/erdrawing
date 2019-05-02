@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+	<!-- Controller 어노테이션을 처리 -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- spring에서 처리하지 못하는 요청은 was(servlet-container)에게 위임  -->
+	<mvc:default-servlet-handler/>
+	
+	
+	<!-- view resolver 설정 -->
+	<!-- html 응답을 생성하는 jsp를 처리해주는 viewResolver와 별개로
+		json 응답을 생성하는 viewResolver를 등록 
+		
+		viewResolver의 order : 우선순위(낮을수록 우선순위가 높다 => 먼저 적용)
+	-->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="0" /> <!-- 우선순위 -->
+	</bean>
+	
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	<bean id="profileImgView" class="kr.or.ddit.view.ProfileImgView" />
+	
+
+	<!-- tiles resolver 설정 -->
+	<bean class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" >
+		<property name="order" value="1"/> <!-- 우선순위 -->
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>classpath:kr/or/ddit/config/tiles/tiles.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- jsp를 처리해줄 view resolver -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2"/>	<!-- 우선순위 -->
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+
+
+	<!-- @Controller 스캔 -->
+	<context:annotation-config/>
+	
+	<!-- use-default-filters="true" 전체 어노테이션 스캔 -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+	
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<!-- 예외처리 위해 사용 -->
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>	
+
+	</context:component-scan>
+	
+	
+	
+	
+	<!-- 
+		spring 파일 업로드를 위한 설정
+		1. multipartResolver 등록 (id, name은 multipartResolver로 정의되어있음)
+		2. commons-fileupload 디펜던시 추가(pom.xml)
+	 -->
+	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	 	<property name="maxUploadSize" value="26214400" />		<!--  -->
+	 	<property name="maxUploadSizePerFile" value="5242880" />	<!-- 1024 * 1024 * 5 -->
+	 </bean>
+
+	
+	<!-- 웹소캣 -->
+	<bean id="erdHandler" class="kr.or.ddit.websocket.util.ErdHandler"/>
+	<bean id="msgHandler" class="kr.or.ddit.websocket.util.MsgHandler"/>
+	<bean id="chatHandler" class="kr.or.ddit.websocket.util.ChatHandler"/>
+	<websocket:handlers>
+		<websocket:mapping path="/erdEcho" handler="erdHandler"/>
+		<websocket:mapping path="/msgEcho" handler="msgHandler"/>
+		<websocket:mapping path="/chatEcho" handler="chatHandler"/>
+		
+		<!-- http session	 사용하기 위해 추가 -->
+		<websocket:handshake-interceptors>
+			<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+		</websocket:handshake-interceptors>
+<!-- 		<websocket:sockjs/> -->
+	</websocket:handlers>
+	
+	
+	
+		
+	 
+	 <!-- 국제화 코드 -->
+	 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	 
+	 <!-- localeChangerInterceptor -->
+	 <mvc:interceptors>
+	 	<mvc:interceptor>
+	 		<mvc:mapping path="/**"/>
+	 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+				<property name="paramName" value="language" />	 		
+	 		</bean>
+	 	</mvc:interceptor>
+	 </mvc:interceptors>
+	 
+
+	
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

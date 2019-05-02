@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	
+
+<!-- 	@Service, @Repository 어노테이션 적용된 클래스를 스캔 -->
+<!-- 	spring bean에 정의된 @Autowired, @Resource , @Inject -->
+	<context:annotation-config/>
+	
+<!-- 	@Controller, @Service, @Repository, @Component를 스캔 -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		
+	</context:component-scan>
+
+
+	<!--  
+		messageSource 등록 
+		bean 이름은 messageSource로 해야 spring에서 인식을 한다.
+	-->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:kr/or/ddit/config/msg/error</value>	<!-- 에러 properties파일 -->
+				<value>classpath:kr/or/ddit/msg/msg</value>		<!-- 국제화 properties파일 -->
+			</list>
+		</property>
+	</bean>
+	
+	
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="smtp.gmail.com" />
+    <property name="port" value="587" />
+    <property name="username" value="prings196s@gmail.com" />
+    <property name="password" value="spring206!" />
+    <property name="javaMailProperties">
+        <props>
+            <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+            <prop key="mail.smtp.starttls.enable">true</prop>
+            <prop key="mail.smtp.auth">true</prop>
+        </props>
+    </property>
+</bean>
+<bean id="mailService" class="kr.or.ddit.api.mail.MailServiceImpl">
+    <property name="javaMailSender" ref="javaMailSender" />
+</bean> 
+
+
+
+</beans>

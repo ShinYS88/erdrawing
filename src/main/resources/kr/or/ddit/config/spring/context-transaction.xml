@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED"/>
+			
+			<!-- <tx:method rollback-for=""/>
+			기본설정으로 RuntimeExcption이 발생할 경우 자동 rollback처리
+			RuntimeException이 아닌 다른 예외 발생시 rollback을 처리 하고 싶을 때 설정하는 옵션 -->
+			
+			
+			<!-- <tx:method name="get" read-only="true"/>
+			get이 들어가면 트랜젝션을 사용하지 않겠다는 정의 (읽기전용) -->
+
+			
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice" pointcut="within(kr.or.ddit..service.*)"/>
+	</aop:config>
+
+</beans>

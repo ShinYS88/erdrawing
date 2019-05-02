@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!--   <properties resource="kr/or/ddit/config/db/db.properties" /> -->
+  
+  <typeAliases>
+<!--   	<typeAlias alias="userVo" type="kr.or.ddit.user.model.UserVO"/> -->
+	<typeAlias alias="memberVo" type="kr.or.ddit.member.model.MemberVo"/>
+	<typeAlias alias="erdVo" type="kr.or.ddit.erd.model.ErdVo"/> 
+	<typeAlias alias="erdLikeVo" type="kr.or.ddit.erd.model.ErdLikeVo"/> 
+	<typeAlias alias="teamListVo" type="kr.or.ddit.team.model.TeamListVo"/> 
+	<typeAlias alias="teamVo" type="kr.or.ddit.team.model.TeamVo"/> 
+	<typeAlias alias="tagVo" type="kr.or.ddit.team.model.TagVo"/> 
+	<typeAlias alias="tagHistVo" type="kr.or.ddit.team.model.TagHistVo"/> 
+	<typeAlias alias="messageVo" type="kr.or.ddit.message.model.MessageVo"/>
+	 
+	
+	<typeAlias alias="boardVo" type="kr.or.ddit.post.model.BoardVo"/>
+	<typeAlias alias="postVo" type="kr.or.ddit.post.model.PostVo"/>
+	<typeAlias alias="reportVo" type="kr.or.ddit.post.model.ReportVo"/>
+	<typeAlias alias="uploadFileVo" type="kr.or.ddit.post.model.UploadFileVo"/>
+	<typeAlias alias="commentsVo" type="kr.or.ddit.post.model.CommentsVo"/>
+	<typeAlias alias="commentLikeVo" type="kr.or.ddit.post.model.CommentLikeVo"/>
+	<typeAlias alias="pageVo" type="kr.or.ddit.util.model.PageVo"/>
+	<typeAlias alias="ticketVo" type="kr.or.ddit.ticket.model.TicketVo"/>
+	<typeAlias alias="ticketBuyHistVo" type="kr.or.ddit.ticket.model.TicketBuyHistVo"/>
+	<typeAlias alias="ticketRefHistVo" type="kr.or.ddit.ticket.model.TicketRefHistVo"/>
+	
+	<typeAlias alias="domainVO" type="kr.or.ddit.erd.model.DomainVo"/>
+	<typeAlias alias="chatVo" type="kr.or.ddit.erd.model.ChatVo"/>
+	<typeAlias alias="erdHistVO" type="kr.or.ddit.erdhistory.model.ErdHistVo"/>
+	
+	
+	 
+	
+  </typeAliases>
+  
+<!--   <environments default="development"> -->
+<!--     <environment id="development"> -->
+<!--       <transactionManager type="JDBC"/> -->
+<!--       <dataSource type="POOLED"> -->
+<!--         <property name="driver" value="${jdbc.driver}"/> -->
+<!--         <property name="url" value="${jdbc.url}"/> -->
+<!--         <property name="username" value="${jdbc.username}"/> -->
+<!--         <property name="password" value="${jdbc.password}"/> -->
+<!--       </dataSource> -->
+<!--     </environment> -->
+<!--   </environments> -->
+  <mappers>
+<!--     <mapper resource="kr/or/ddit/config/db/mapper/user.xml"/> -->
+ 			<mapper resource="kr/or/ddit/config/db/mapper/member.xml"/>
+ 			<mapper resource="kr/or/ddit/config/db/mapper/post.xml"/>
+			<mapper resource="kr/or/ddit/config/db/mapper/erd.xml"/>
+			<mapper resource="kr/or/ddit/config/db/mapper/team.xml"/>
+			<mapper resource="kr/or/ddit/config/db/mapper/ticket.xml"/>
+			<mapper resource="kr/or/ddit/config/db/mapper/erdDrawing.xml"/>
+  </mappers>
+</configuration>

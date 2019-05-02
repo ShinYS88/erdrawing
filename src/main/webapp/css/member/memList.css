@@ -1,0 +1,110 @@
+
+h2{
+	color: #ffffff;
+	    border-bottom: 1px solid #dedede;
+}
+
+input[type=checkbox].toggle-switch:checked {
+    background-color: #3af;
+}
+
+input[type=checkbox].toggle-switch::after {
+    margin-top: 0.5px;
+    content: '';
+    width: 25px;
+    height: 23px;
+    background-color: white;
+    border-radius: 3em;
+    position: absolute;
+    transform: scale(0.8);
+    left: 0;
+    transition: left 0.09s ease-in-out;
+    box-shadow: 0 0.1em rgba(0, 0, 0, 0.5);
+}
+
+input[type=checkbox].toggle-switch {
+    font-size: 10px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    width: 50px;
+    height: 25px;
+    border-radius: 3em;
+    background-color: #ddd;
+    outline: 0;
+    cursor: pointer;
+    transition: background-color 0.09s ease-in-out;
+    position: relative;
+}
+
+input[type=checkbox].toggle-switch:checked::after {
+    left: 27px;
+}
+    
+.btn-st3{
+ cursor: pointer;}   
+    
+#divNav{
+	 margin-left: 0px;
+	 	width: 0;
+}
+tbody tr:nth-child(even) {
+	background-color: #dddddd;
+	height: 50px;
+	
+}
+
+tbody tr:nth-child(odd) {
+	background-color: #ffffff;
+	height: 50px;
+}
+
+table {
+	width: 100%;
+	font-size: 12px
+
+}
+
+thead {
+	background: #cacaca;
+}
+
+
+.d1 ul li {
+	display:block;
+	width: 100px;
+	text-align: center;
+	
+}
+#modalEvn{
+	color: #000000;
+}
+
+.modalLabel {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+    width: 150px;
+}
+
+
+.d1 ul ul {
+	position: absolute;
+	display: none;background: rgb(109,109,109);
+display:none;  /* 평상시에는 서브메뉴가 안보이게 하기 */
+height:auto;
+padding:0px;
+margin:0px;
+border:0px;
+position:absolute;
+width:100px;
+z-index:200;
+}
+.d1 ul ul li {
+	display: block;
+}
+
+#setTd{
+width: 1px;
+}

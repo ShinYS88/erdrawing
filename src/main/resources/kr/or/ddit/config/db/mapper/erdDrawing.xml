@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="erdDrawing">
+
+
+<!-- 도메인 리스트 출력 -->
+	<select id="domainList" parameterType="Integer" resultType="domainVO">
+		select * from domain
+		where erdno = #{erdno}
+	</select>
+	
+<!-- 도메인 추가 -->
+	<insert id="domainInsert" parameterType="domainVO">
+	
+		<selectKey keyProperty="domainNo" resultType="Integer" order="AFTER">
+			SELECT 
+			seq_domainno.CURRVAL
+			FROM
+			DUAL
+	    </selectKey>
+    
+    
+		insert into domain
+			(domainNo, domainNm, domainDataType, domainDefaultValue, erdNo)
+		values
+			(seq_domainno.nextval, #{domainNm}, #{domainDataType, jdbcType=VARCHAR}, #{domainDefaultValue, jdbcType=VARCHAR}, #{erdNo})
+	</insert>
+	
+<!-- 도메인 수정 -->
+	<update id="domainModify" parameterType="domainVO">
+		update domain
+		set domainNm = #{domainNm},
+			domainDataType = #{domainDataType, jdbcType=VARCHAR},
+			domainDefaultValue = #{domainDefaultValue, jdbcType=VARCHAR}
+		where domainNo = #{domainNo}
+	</update>
+	
+<!-- 도메인 삭제 -->
+	<delete id="domainDelete" parameterType="Integer">
+		delete from domain 
+		where domainNo = #{domainNo}
+	</delete>
+
+<!-- 도메인 검색 -->
+	<select id="domainSearch" parameterType="domainVO" resultType="domainVO">
+		select * from domain
+		where domainNm like '%'||#{domainNm}||'%' 
+		  and erdNo = #{erdNo}
+		  order by domainNo
+	</select>
+	
+	
+<!-- erd히스토리 개수 가져오기 -->
+	<select id="selectCntHist" parameterType="erdHistVO" resultType="int">
+		select count(*)
+        from erd_hist
+        where erdno=#{erdNo}
+        and erdIsVisible=#{erdIsVisible}
+	</select>
+	
+<!-- erd히스토리 업데이트	 -->
+	<update id="erdHistUpdate" parameterType="erdHistVO">
+		update erd_hist
+				   set erdHistNo = seq_erdhistno.nextval,
+		               erdNo = #{erdNo},
+		               erdDt = sysdate,
+		               erdIsVisible = #{erdIsVisible},
+		               snapNm = #{snapNm, jdbcType=VARCHAR},
+		               snapImg = #{snapImg, jdbcType=VARCHAR},
+		               snapCdt = sysdate,
+		               erdTitle = #{erdTitle, jdbcType=VARCHAR},
+		               erdJson = #{erdJson, jdbcType=VARCHAR}
+		       where  erdhistNo = (select min(erdhistNo)
+		                             from erd_hist
+		                             where erdNo = #{erdNo}
+		                             and  erdIsVisible = #{erdIsVisible})
+	</update>
+	
+	
+<!--  erd히스토리 추가 -->
+	<insert id="erdHistInsert" parameterType="erdHistVO">
+		insert into erd_hist
+			(erdHistNo, erdNo, erdDt, erdIsVisible, snapNm, snapImg, snapCdt, erdTitle, erdJson)
+		values
+			(seq_erdhistno.nextval, #{erdNo}, sysdate, #{erdIsVisible}, #{snapNm, jdbcType=VARCHAR}, #{snapImg, jdbcType=VARCHAR}, sysdate, #{erdTitle, jdbcType=VARCHAR}, #{erdJson, jdbcType=VARCHAR})
+	</insert>
+	
+	
+<!-- erd 최신 히스토리 가져오기 -->
+	<select id="erdMaxHistSelect" parameterType="Integer" resultType="erdHistVO">
+		select * from erd_hist
+		where erdhistno = (select max(erdhistno) as erdhistno from erd_hist 
+							where erdNo = #{erdNo}
+							and erdIsVisible = 'T')
+	</select>
+	
+	
+<!-- erd히스토리 리스트 가져오기 -->
+	<select id="erdHistList" parameterType="Integer" resultType="erdHistVO">
+		select * from erd_hist
+		where erdNo = #{erdNo}
+		and erdIsVisible = 'T'
+		order by erdHistNo desc
+	</select>
+	
+	
+<!-- erd스냅샷 리스트 가져오기 -->
+	<select id="erdSnapList" parameterType="Integer" resultType="erdHistVO">
+		select * from erd_hist
+		where erdNo = #{erdNo}
+		and erdIsVisible = 'F'
+		order by erdHistNo desc
+	</select>
+	
+	<!-- 채팅 내용 insert -->
+	<insert id="chatInsert" parameterType="chatVo">
+		insert into chat
+		(chatno, erdno, memid, chatcontent, chatindt)
+		values
+		(SEQ_CHATNO.nextval, #{erdNo}, #{memId}, #{chatContent}, sysdate)
+	</insert>
+	
+	<!-- 채팅 리스트 가져오기 -->
+	<select id="chatList" parameterType="int" resultType="chatVo">
+		select *
+		from chat
+		where erdno = #{erdNo}
+		order by chatindt asc
+	</select>
+
+</mapper>
