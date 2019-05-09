@@ -27,15 +27,15 @@ Web상에서 UI조작으로 엔티티,키,속성,관계 등을 조작하여 ERD�
 
 
 <h2>프로젝트 내 담당업무</h2>
- - Spring Framework, Maven 프로젝트 및 패키지 설계<br>
- - canvas를 활용하여 UI형태로 erd를 설계 할 수 있도록 개발<br>
- - websocket과 ajax를 활용하여 회원 간의 erd설계 동시작업<br>
- - 설계된 ERD -> SQL 쿼리로 추출<br>
- - 도메인, 히스토리, 스냅샷 기능<br>
- - canvas로 설계된 erd데이터를 db연동<br>
- - tiles를 활용한 레이아웃설계<br>
- - 프론트엔드(전반적인 css 웹디자인) <br>
 
+ - Spring Framework, Maven 프로젝트 및 패키지 설계
+ - canvas를 활용하여 UI형태로 erd를 설계 할 수 있도록 개발
+ - websocket과 ajax를 활용하여 회원 간의 erd설계 동시작업
+ - 설계된 ERD -> SQL 쿼리로 추출
+ - 도메인, 히스토리, 스냅샷 기능
+ - canvas로 설계된 erd데이터를 db연동
+ - tiles를 활용한 레이아웃설계
+ - 프론트엔드(전반적인 css 웹디자인, UI제작 및 fontawesome 사용)
 
 
 
