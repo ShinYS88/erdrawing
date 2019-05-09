@@ -273,7 +273,7 @@ function searchTable(tableName){
 function changeAttrToPk(arr_attrs,key,table){
 	for(var j =arr_attrs.length-1; j>-1; j--){
 	
-		if(arr_attrs[j].findOne('.attr_phisical_txt').attrs.text == key){
+		if(arr_attrs[j].findOne('.attr_phisical_txt').text() === key){
 			console.log("속성찾음!");
 			arr_attrs[j].findOne('.attr_phisical_txt').parent.parent;
 			var arr_attribute = new Array();

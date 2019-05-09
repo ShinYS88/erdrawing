@@ -107,9 +107,9 @@ margin-left:10px;
 				<div style="background:#232323; color:#fff; min-height:50px; line-height:100px; padding-left:5px; font-size:20px; font-weight:600;">
 					<ul style=" min-height:50px; line-height: 2.2">
 					<c:forEach var="teamList" items="${teamInfoList }" >
-						<li class="team-li">
+						<li class="team-li" data-teamno="${teamList.teamNo }">
 							<a href="/team?teamNo=${teamList.teamNo }">
-								<div>${fn:toUpperCase(fn:substring(teamList.teamNm,0,1 ))}</div>
+								<div class="bg-box1">${fn:toUpperCase(fn:substring(teamList.teamNm,0,1 ))}</div>
 								<span>${teamList.teamNm }</span>
 							</a>
 						</li>
@@ -163,7 +163,7 @@ margin-left:10px;
 			</div>
 			<div class="line-title">
 				<h2 class="page-title">TEAM ERD</h2>
-				<a class="add-btn1 myAdd"><i class="fas fa-plus-square"></i></a>
+				<a class="add-btn1 myAddTE"><i class="fas fa-plus-square"></i></a>
 			</div>
 			<div class="row">
 						<div class="col-sm-12">
@@ -224,6 +224,7 @@ margin-left:10px;
 </div>
 
 <script>
+var getTeamNo = ${teamInfo.teamNo};
 	// 팀 멤버 권한 변경(user <-> admin)
 	$("input[name=authCheck]").on("click", function(e){ 
 		var teamAuth = this.value;
@@ -354,5 +355,28 @@ margin-left:10px;
 	 function erdClick(erdNo){
 			$(location).attr('href', "${cp}/erdDrawing?erdNo="+erdNo);
 	}
+	 
+	 
+	var curTeamNo = ${teamInfo.teamNo};
+	$(".team-li").each(function(item, i){
+		
+		var listTeamNo = $(this).data("teamno");
+		if(curTeamNo === listTeamNo){
+			$(this).addClass('active');
+		}
+	});
+	
+	var S_id = '${SESSION_MEMBERVO.memId}';
+	$(".member-li").each(function(){
+		
+		var listTeamMember = $(this).data("memid");
+		
+		if(S_id === listTeamMember){
+			$(this).addClass('active');
+		}
+	});
+		
 </script>
+
+
 

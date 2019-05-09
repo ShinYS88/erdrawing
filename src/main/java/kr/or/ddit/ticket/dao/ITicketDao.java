@@ -160,4 +160,6 @@ public interface ITicketDao {
 
 	List<Map<String, Object>> selectTicketBuyList(String ticketBuyNo);
 	
+	// 사용중인 티켓 갯수
+	int getUsingTicketCnt(String memId);
 }

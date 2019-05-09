@@ -34,7 +34,6 @@ background-color: rgb(102, 102, 102);
 
 
 </style>
-<br/><br/>
 <div class="navbar-header d1" style="padding-right: 10px;">
 	<ul class="left-menu1" style="margin-top: 100px; color: #D1D1D2;">
 		<li class="navbar-brand1" style="font-size: 18px; font-weight: bold;"><a href="/ticket/ticketChart">Total Sales</a></li>
@@ -49,12 +48,10 @@ background-color: rgb(102, 102, 102);
 			</c:forEach>
 			</ul></li>
 	</ul>
-</div>
+</div> 
+<div style="text-align: center;"><h3 class="page-header" style="color: #D1D1D2;">Ticket별 매출 </h3></div>
 
 
-
-
-<br/><br/><br/> 
 <form id="frm">
 <button class="yearBtn" value="2019" >2019</button>	
 <button class="yearBtn" value="2018">2018</button>	

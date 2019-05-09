@@ -35,12 +35,12 @@
                   <input type="text" name="ticketPeriod" id="ticketPeriod" >    
                </div>   
                
-                <div class="pass form-group">
+                <div  class="pass form-group imgDiv">
                   <label class="modalLabels"  >ticketImg</label> 
                   <img id="profileImg" src="" width="340" height="320" />
                </div>
                
-               <div class="filebox img-btn btn-style1">
+               <div class="filebox img-btn btn-style1 imgDiv">
                <label  class="btn-style1" for="input_img">티켓 이미지 선택</label> 
                <input   type="file" id="input_img" name="profileImg" />
                

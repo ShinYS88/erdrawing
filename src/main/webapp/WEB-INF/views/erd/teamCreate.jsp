@@ -157,7 +157,14 @@ $( "#autocomplete" ).autocomplete({
         
         var html = '';
         html += '<li class="teamMem" value="' + ui.item.value + '">';
-        html += '	<div><img src="/member/memberImg?memId='+ui.item.value+'"></div>';
+       
+        if( ui.item.data.indexOf("http:")>-1){
+        	html += '	<div><img src="'+ui.item.data+'"></div>';
+        }else{
+        	html += '	<div><img src="/member/memberImg?memId='+ui.item.value+'"></div>';
+        } 
+        
+       
         html += '	<div>' + ui.item.value + '</div>';
         html += '	<div id="delBtn"><i class="fas fa-minus-circle"></i></div>';
         html += '</li>';

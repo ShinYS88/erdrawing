@@ -31,7 +31,7 @@ h2
   z-index: 1;
   position: relative;
   width: 490px;
-  height: 650px;
+  height: 580px;
   margin: 0 auto;
   margin-top: 20px;
   background-color: white;
@@ -91,12 +91,12 @@ h2
     overflow-y: auto;
   position: absolute;
   top: 67px;
-     height: 500px;
+     height: 400px;
   width: 100%;
 }
 
-.time-stamp {
-  position: relative;
+.time-stamp { 
+  position: relative; 
   width: 100%;
   text-align: center;
   margin-top: 20px;
@@ -124,8 +124,8 @@ h2
 }
 
 .message.to {
-  color: #7C7C7C;
-  background-color: #F1F1F1;
+  color: #ffffff;
+  background-color: darkgray;
   margin-left: 50%;
   /* 
   margin-right: 26px;
@@ -317,13 +317,15 @@ h2
 		             h = "0" +h;
 	                
 	            }
-	            else if(hour < 24)
+	            else
 	            {
 	                ap="am";
 	                if(h>=10);
 		            else
 		             h = "0" +h;
 	            }
+				 
+				 
 	             mm = now.getMinutes();
 	            if(mm>=10);
 	            else

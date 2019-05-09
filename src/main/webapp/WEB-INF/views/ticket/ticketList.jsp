@@ -51,8 +51,8 @@ width: 100px;
 }
 
 #add{
-    margin-right: 1.5%;
-    margin-left: 90%;
+margin-right: 8%;
+    margin-left: 84%;
     position: relative;
     padding: 10px;
     font-weight: 100;
@@ -94,9 +94,23 @@ color:#fff;
     height: 100%;
     overflow: hidden;
 }
+
+.page-header {
+    padding-bottom: 12px;
+    margin:  0 ; 
+    border-bottom: 1px solid #eee;
+}
 </style>
 <br />
 <br />
+<c:if test="${SESSION_MEMBERVO.memAuth == 'F' || SESSION_MEMBERVO.memAuth == null}">
+<div style="text-align: center;">
+    <h3 class="page-header" style="color: #fff;  font-weight: bold;">Ticket</h3>
+   </div>
+   <div style="margin-bottom: 50px"></div>
+</c:if>
+
+
 
 <c:if test="${SESSION_MEMBERVO.memAuth == 'T' }">
 
@@ -106,43 +120,44 @@ color:#fff;
 </c:if>
 
 
-<div class="best-erd-list tickets">
-   <div class="inner-container">
-      <div class="col-sm-12">
-         <ul class="erd-box-list">
+<c:forEach var="ticket" varStatus="status" items="${ticketList }">
+	<div style="display: block; margin-bottom: 27px ;margin-left: 8%;margin-right: 8% ;">
+		<div
+			style="border: 2px solid darkgray; display: inline-block; width: 100%; background-color: #5d5d5d;">
 
-            <c:forEach var="ticket" varStatus="status" items="${ticketList }">
-               <li class="erd-box-item"  >
-               
-                  <a class="preview-box" data-ticketno="${ticket.ticketNo }"  style="" class="modifyModal" data-toggle="modal" data-target="#modifyBuyModal" >
-                     <div class="bg-box">
-                        <div class="bg-img1" ><img alt="" src="${cp }/ticket/ticketImg?ticketNo=${ticket.ticketNo }" width="500" height="70"></div>
-                        <div class="table-bg-text">
-                           <div class="bg-text shinys"><h1>${ticket.ticketContent }</h1>${ticket.ticketPrice } 원</div>
-                        </div>
-                     </div>
-                  </a>
-            
-                  <div class="description-item">
-                     <c:if test="${SESSION_MEMBERVO.memAuth == 'T' }">
-                        <div  class="modifyModal" style="float: right; cursor: pointer;" data-toggle="modal" data-target="#ticketModalEvnTest" data-ticketno="${ticket.ticketNo }">수정</div>
-                     </c:if>
+			<div
+				style="display: inline-block; background-color: #ccdb5c; width: 27%; text-align: center;">
+				<h4 style="display: inline-block; color:#000; padding: 30px; font-size: 28px; ">${ticket.ticketContent }&nbsp;권</h4>
+			</div>
 
-                     <div style="float: left;">${ticket.ticketContent }</div>
+			<div style="display: inline-block; margin-left: 10%; width: 47%; text-align: center;     margin-right: 20px;">
+				<%-- <label style="display: inline-block; margin-left: 10%;">${ticket.ticketContent }</label> --%>
+				<label style="font-size: 18px; margin-top: 3px; margin-bottom: 20px'" >${ticket.ticketPrice }&nbsp;원</label><br/>
+					<label>	${ticket.ticketPeriod }일 동안 ERD생성 시 비공개설정을 더 많이 사용할수있는 이용권입니다.</label>
+			</div>
+			<c:if test="${SESSION_MEMBERVO.memAuth == 'T' }">
+				
+			</c:if>
+			<div  style="display: inline-block; cursor: pointer;"
+				data-ticketno="${ticket.ticketNo }" class="modifyModal buyTicketBtn"
+				data-toggle="modal" data-target="#modifyBuyModal">
+				<button  class="btn btn-default" style="">구매</button></div>
+				
+			<c:if test="${SESSION_MEMBERVO.memAuth == 'T' }"> 
+			<div
+				style="display: inline-block; margin-left: 10%; color: ccdbaa; border-radius: 3px; padding: 3px; margin: 5px; cursor: pointer;"
+				data-toggle="modal" data-target="#ticketModalEvnTest"
+				data-ticketno="${ticket.ticketNo }" class="modifyModal">
+				<button class="btn btn-default" style="">수정</button>
+			</div>
+		
+			</c:if>	
+		
+		</div>
+	</div>
 
-                     <ul class="tagList" style="clear: both;">
-                        <li>가격:</li>
-                        <li>&nbsp;${ticket.ticketPrice }</li>
-                     </ul>
-                     
-                  </div></li>
-            </c:forEach>
-         </ul>
-      </div>
-   
-   </div>
-   <input type="hidden" id="alertMsg" value="${alertMsg }">
-   
+</c:forEach>
+
 <%@ include file="/WEB-INF/views/ticket/ticketModal.jsp"%>
    
    
@@ -153,6 +168,8 @@ color:#fff;
    var regex= /^[0-9]+$/;
    $(document).ready(function() {
       
+	   $(".imgDiv").hide();
+	   
        $("#input_img").on("change", handleImgFileSelect);
 
       var msg = "${msg}"
@@ -161,7 +178,7 @@ color:#fff;
       }
    
       //티켓 클릭시
-      $(".preview-box").on('click', function() {
+      $(".buyTicketBtn").on('click', function() {
          ticketNo = $(this).data("ticketno");
          getModifyInfo(ticketNo);
            $("#sinbuy").hide();  
@@ -320,6 +337,7 @@ color:#fff;
          $("#ticketNo").val("");
          $("#ticketPrice").val("");
          $("#ticketContent").val("");
+         $("#ticketPeriod").val("");
          $("#profileImg").attr("src","/image/noImg.png");
       }
       
@@ -491,11 +509,5 @@ color:#fff;
             
          }
          
-         alert("${alertMsg}");
-         if($("#alertMsg").val() != ""){
-     		alert($("#alertMsg").val());
-     		$("#alertMsg").val("");
-     	} 
       
    </script>
-</div>

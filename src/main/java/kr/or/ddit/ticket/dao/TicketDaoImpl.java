@@ -114,6 +114,11 @@ public class TicketDaoImpl implements ITicketDao{
 	public List<Map<String, Object>> selectTicketBuyList(String ticketBuyNo) {
 		return sqlSession.selectList("ticket.selectTicketBuyList",ticketBuyNo);
 	}
+
+	@Override
+	public int getUsingTicketCnt(String memId) {
+		return sqlSession.selectOne("ticket.getUsingTicketCnt", memId);
+	}
 	
 	
 

@@ -36,7 +36,7 @@ td{
 
 .table-responsive{
 	/* background:#eeeeee; */
-	padding:20px;
+	padding:10px;
 	border-radius:10px;	
 }
 
@@ -79,6 +79,12 @@ td{
 	border-radius:3px;
 }
 
+
+.form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: 0;
+}
 </style>
    
 
@@ -90,10 +96,10 @@ td{
       <h3 class="page-header" style="color: #D1D1D2;">상세조회</h3>
       <div class="col-sm-10 col-md-10 main">
           <form id="frm" action="${cp}/delPost" method="post" class="form-horizontal" role="form">
-         <div class="form-group">
-            <label for="title" class="col-sm-1 control-label" style="color: #fff;">글제목&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+         <div class="form-group" style="border-bottom: 1px solid #eee; width: 945px;">
+           <!--  <label for="title" class="col-sm-1 control-label" style="color: #fff; margin-left: 20px;">글제목&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> -->
             <div class="col-sm-7">
-               <label class="control-label" style="color: #fff;">${postList.postTitle}</label>
+               <label class="control-label" style="color: #fff; font-size: 25px; margin-bottom: 10px;">&nbsp;&nbsp;${postList.postTitle}</label>
             </div>
             
 <style>
@@ -104,7 +110,7 @@ td{
 </style>
 	
 	<input type="hidden" name="boardNo" value="${boardNo}"> 
-	<input type="button" id="report" onclick="layer_open()" value="신고" style="margin-left: 250px;" />
+	<input type="button" id="report" onclick="layer_open()" value="신고" style="margin-left: 340px;" />
 	
 <!-- <input type="button" id="report" onclick="layer_open()" value="신고"> -->
 <!-- <input type="button" value="레이어팝업 열기" onclick="layer_open();"  style="cursor:pointer; background-color:#663333; color:#FFF;" /> -->
@@ -139,31 +145,21 @@ td{
 </div>
             
          </div>
-         <div class="form-group">
-            <label for="writer" class="col-sm-1 control-label" style="color: #fff;">작성자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <div class="col-sm-7">
-               <label class="control-label" style="color: #fff;">${postList.writerId}</label>
-            </div>
-         </div>
-         
-         <div class="form-group">
-            <label for="insertDate" class="col-sm-1 control-label" style="color: #fff;">작성일&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <div class="col-sm-7">
+           <div class="form-group">
+            <div class="col-sm5" style="font-size: 12px;  width: 945px; margin-left: 15px;">
+            <label for="writer" class="col-sm-0 control-label" style="color: #fff; margin-left: 5px;">작성자&nbsp;&nbsp;</label>
+               <label class="control-label" style="color: #fff">${postList.writerId}&nbsp;&nbsp;&nbsp;</label>
+            <label for="insertDate" class="col-sm-1 control-label" style="color: #fff; float: none;">작성일&nbsp;&nbsp;</label>
                <label class="control-label" style="color: #fff;"><fmt:formatDate value="${postList.postRegDt}" pattern="yyyy-MM-dd" /></label>
-            </div>
-         </div>
          
-         <div class="form-group">
-            <label for="content" class="col-sm-1 control-label" style="color: #fff;">글내용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <div class="col-sm-7">
-               <label class="control-label" style="color: #fff;">${postList.postContent}</label>
-            </div>
-         </div>
+         
+        
+         
          
          <%-- 파일첨부 --%>
-         <div class="form-group" style="color: #fff;">
+         <div class="form-group" style="color: #fff; ">
             <label for="content" class="col-sm-1 control-label" style="color: #fff;">첨부파일&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <div class="col-sm-7">
+            <div class="col-sm-7" style="padding-top: 5px;">
                
                <c:choose>
                		<c:when test="${fileList.size() =='0'}">
@@ -176,48 +172,20 @@ td{
                </c:forEach>
                		</c:otherwise>
                   </c:choose>
-            
-               
             </div>
          </div>
-
-         <div class="form-group">
-            <label for="content" class="col-sm-1 control-label" style="color: #fff;">댓글&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+         
+          <div class="form-group">
+            <!-- <label for="content" class="col-sm-1 control-label" style="color: #fff; margin-left: 20px;">글내용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> -->
+            <br><br><br>
             <div class="col-sm-7">
-               <input type="text" class="form-control" id="cmtText" />
-            </div>
-            
-            <div class="col-sm-2">
-               <button id="cmtBtn" type="button" class="btn btn-default" style="margin-left: 20px;">등록</button>
+               <div style="color: #fff; font-size: 16px; margin-left: 25px;">${postList.postContent}</div>
             </div>
          </div>
-         <br><br>
-
-         <div class="table-responsive" style="margin-right: 20px; overflow: hidden;">
-            <table class="table table-striped" style="width: 100%; height: 100px;">
-               <thead>
-                  <tr style="height: 40px; line-height: 100px; line-height: 5px;">
-                     <th style="text-align: center; color:black; width:15%;">댓글번호</th>
-                     <th style="text-align: center; color:black; width:20%;">작성자</th>
-                     <th style="text-align: center; color:black; width:35%;">댓글내용</th>
-                     <th style="text-align: right; color:black; width:20%;">좋아요</th>
-                     <th style="text-align: center; color:black; width:20%;"></th>
-                  </tr>
-               </thead>
-               
-	               <tbody id="cmtTbody">
-	               </tbody>
-            </table>
-            
-            <nav id="divNav" style="text-align: center; width: 100%;">
-				<ul class="pagination" id="pagination">
-				</ul>
-			</nav>
-         </div>
+            <br><br><br>
          
-         
-         <div class="form-group">
-            <div class="col-sm-3">
+                  <div class="form-group">
+            <div class="col-sm-3" style="padding-bottom: 15px; margin-left: 25px;">
                <input type="button" id="listBtn" value="목록" class="btn btn-default" />
                <c:if test="${SESSION_MEMBERVO.memId == postList.writerId}">
                   <input type="button" id="updBtn" value="수정" class="btn btn-default" />
@@ -240,12 +208,53 @@ td{
 				</c:otherwise>
 			</c:choose>
 			
+            </div>  
+         </div>  
+        
+        
+<br>        
+<div style="background-color: #7A7A7A; padding-top: 20px; border-radius:10px;" >
+         <div class="form-group"style="border: 1px; 
+              margin-bottom: 0px;  width: 905px; height: 110px; padding-top:13px; margin-left:20px; border-radius:10px; background-color: #eeeeee;">
+            <div class="col-sm-10" style="margin-left: 20px; margin-bottom: 15px;" >
+            <span style="color: #000; font-size: 13px;">댓글 | 악의적인 비방글은 삼가해주세요.</span>
+           
+               <textarea class="form-control" id="cmtText" style="height: 60px; width: 780px;"> </textarea>
             </div>
-         </div>   
+            <div class="col-sm-1">
+               <button id="cmtBtn" type="button" class="btn btn-default" style="height:60px; width:80px; margin-left: 35px; margin-top: 20px;">등록</button>
+            </div>
+         </div>
+         
+
+         <div class="table-responsive" style="margin-right: 20px; overflow: hidden;">
+            <table class="table table-striped" style="width: 100%; height: 100px; margin: 10px;">
+               <thead>
+                  <tr style="height: 40px; line-height: 100px; line-height: 5px;">
+                     <th style="text-align: center; color:black; width:15%;">댓글번호</th>
+                     <th style="text-align: center; color:black; width:20%;">작성자</th>
+                     <th style="text-align: center; color:black; width:35%;">댓글내용</th>
+                     <th style="text-align: right; color:black; width:20%;">좋아요</th>
+                     <th style="text-align: center; color:black; width:20%;"></th>
+                  </tr>
+               </thead>
+               
+	               <tbody id="cmtTbody">
+	               </tbody>
+            </table>
+            
+            <nav id="divNav" style="text-align: center; width: 100%;">
+				<ul class="pagination" id="pagination">
+				</ul>
+			</nav>
+         </div>
+     
+         
+ 
          </div>
          
          <input type="hidden" id="postNo" name="postNo" value="${postVo.postNo}" />
-      </form>
+      </form></div>  
         </div>
       </div>
          
@@ -413,6 +422,11 @@ td{
          
          //댓글등록버튼 클릭이벤트(ajax)
          $("#cmtBtn").click(function() {
+        	 var memId = "${SESSION_MEMBERVO.memId}";
+        	 if(memId==""){
+        		 alert("로그인 후 이용해주세요.");
+        		return;
+        	 }
             cmtText = $("#cmtText").val();
             if(!confirm("댓글을 등록 하시겠습니까?")){
                 return;

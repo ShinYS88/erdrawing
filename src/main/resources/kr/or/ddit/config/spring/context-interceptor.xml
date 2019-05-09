@@ -15,6 +15,12 @@
 			<mvc:mapping path="/post/likeCmt"/>
 			<mvc:mapping path="/ticket/ticketCardBuy"/>
 			
+			<mvc:mapping path="/mypage"/>
+			<mvc:mapping path="/team"/>
+			<mvc:mapping path="/erdDrawing"/>
+			<mvc:mapping path="/erd/erdAdd"/>
+			
+			
 			
 			 <bean class="kr.or.ddit.login.LoginInterceptor"></bean>
 		</mvc:interceptor>

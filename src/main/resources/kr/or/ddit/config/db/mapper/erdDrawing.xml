@@ -51,6 +51,13 @@
 		  order by domainNo
 	</select>
 	
+<!-- 도메인 1개만 가져오기 -->
+	<select id="domainOneSearch" parameterType="domainVO" resultType="domainVO">
+		select * from domain
+		where domainNm = #{domainNm}
+		  and erdNo = #{erdNo}
+	</select>
+	
 	
 <!-- erd히스토리 개수 가져오기 -->
 	<select id="selectCntHist" parameterType="erdHistVO" resultType="int">
@@ -128,6 +135,20 @@
 		from chat
 		where erdno = #{erdNo}
 		order by chatindt asc
+	</select>
+
+<!--스냅샷 이미지 가져오기  -->
+	<select id="selectSnapImg" parameterType="int" resultType="String">
+	select SNAPIMG
+		from erd_hist
+		where ERDHISTNO = #{erdHistNo}
+	</select>
+	
+	<!--erdjson 데이터  가져오기  -->
+	<select id="selectErdJson" parameterType="int" resultType="String">
+	select ERDJSON
+		from erd_hist
+		where ERDHISTNO = #{erdHistNo}
 	</select>
 
 </mapper>

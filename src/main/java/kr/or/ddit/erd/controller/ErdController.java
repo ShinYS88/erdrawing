@@ -35,6 +35,7 @@ import kr.or.ddit.erd.service.IErdService;
 import kr.or.ddit.member.model.MemberVo;
 import kr.or.ddit.team.model.TagVo;
 import kr.or.ddit.team.service.ITeamService;
+import kr.or.ddit.ticket.service.ITicketService;
 import kr.or.ddit.util.model.PageVo;
 
 @RequestMapping("/erd")
@@ -47,6 +48,9 @@ public class ErdController {
 	
 	@Resource(name="teamService")
 	private ITeamService teamService;
+	
+	@Resource(name="ticketService")
+   private ITicketService ticketService;
 	
 	
 	@RequestMapping(path = { "/erdAdd" }, method = { RequestMethod.POST })
@@ -63,6 +67,7 @@ public class ErdController {
 		
 		// 공개설정이 팀일 때
 		if(erdVo.getErdScope().equals("team")){
+			erdVo.setMemId(memberVo.getMemId());
 			erdVo.setTeamNo(erdVo.getTeamNo());
 		}
 		// 공개설정이 개인일 때
@@ -291,13 +296,15 @@ public class ErdController {
 	public String privateCnt(HttpSession session, Model model){
 		MemberVo memberVo = (MemberVo) session.getAttribute("SESSION_MEMBERVO");
 		String memId = memberVo.getMemId();
-		
+		String alertMsg ="";
 		// private일 경우
 		int privateCnt = erdService.getPrivateCnt(memId);
-		if (privateCnt >= 2 ) {	// and 조건으로 이용권 cnt 0이면 추가
-			 String alertMsg = "private는 2개 까지 무료로 생성 가능합니다." + "\n" + "이용권을 구입해 주세요.";
-			 model.addAttribute("alertMsg",alertMsg);
-		}
+		int usingTicketCnt = ticketService.getUsingTicketCnt(memId);
+		if (privateCnt >= 2 && usingTicketCnt <= 0) {	// and 조건으로 이용권 cnt 0이면 추가
+			 alertMsg = "private는 2개 까지 무료로 생성 가능합니다." + "\n" + "이용권을 구입해 주세요.";
+		}else
+			alertMsg = "";
+		model.addAttribute("alertMsg",alertMsg);
 		return "jsonView";
 	}
 }

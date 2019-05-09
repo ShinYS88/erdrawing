@@ -43,6 +43,14 @@ public class ErdDrawingDaoImpl implements IErdDrawingDao{
 	}
 	
 	@Override
+	public List<DomainVo> domainOneSearch(DomainVo domainVo){
+		return sqlSession.selectList("erdDrawing.domainOneSearch", domainVo);
+	}
+	
+	
+	
+	
+	@Override
 	public int erdHistInsert(ErdHistVo erdHistVo){
 		
 		int cnt = sqlSession.selectOne("erdDrawing.selectCntHist",erdHistVo);
@@ -83,6 +91,16 @@ public class ErdDrawingDaoImpl implements IErdDrawingDao{
 	@Override
 	public List<ChatVo> chatList(int erdNo) {
 		return sqlSession.selectList("erdDrawing.chatList", erdNo);
+	}
+	
+	@Override
+	public String selectSnapImg(int erdHistNo) {
+		return sqlSession.selectOne("erdDrawing.selectSnapImg", erdHistNo);
+	}
+
+	@Override
+	public String selectErdJson(int erdHistNo) {
+		return sqlSession.selectOne("erdDrawing.selectErdJson", erdHistNo);
 	}
 	
 }

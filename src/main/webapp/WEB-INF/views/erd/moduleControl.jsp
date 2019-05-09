@@ -102,6 +102,19 @@ display: block;
 				gogogo1(page);
 			});
 			
+			$(".myAddTE").on("click", function(){
+				page = "erdAdd";
+				
+				gogogo1(page);
+				
+				$("#selTeam").show();
+		    		clickTeam = true;
+		    		
+		    		$('input[name=erdScope][value="team"]').prop("checked",true);
+		    		$('select[name="teamNo"]').val(getTeamNo);
+			});
+			
+			
 			// team추가 스크립트
 			$("#teamAdd").on("click", function(){
 				page = "createTeam";
@@ -142,6 +155,7 @@ display: block;
 	                    type: 'get',
 	                    url: "/pageViewAjax",
 	                    data: { value : page },
+	                    async:false,
 	                    success: function(data) {
 	                    	$(document).scrollTop(0);
 	               			// 모달 띄우기

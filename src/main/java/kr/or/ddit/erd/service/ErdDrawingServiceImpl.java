@@ -32,6 +32,11 @@ public class ErdDrawingServiceImpl implements IErdDrawingService{
 	}
 	
 	@Override
+	public List<DomainVo> domainOneSearch(DomainVo domainVo){
+		return erdDrawingDao.domainOneSearch(domainVo);
+	}
+	
+	@Override
 	public int domainUpdate(DomainVo domainVo){
 		
 		int cnt=0;
@@ -87,6 +92,16 @@ public class ErdDrawingServiceImpl implements IErdDrawingService{
 	@Override
 	public List<ChatVo> chatList(int erdNo) {
 		return erdDrawingDao.chatList(erdNo);
+	}
+	
+	@Override
+	public String selectSnapImg(int erdHistNo) {
+		return erdDrawingDao.selectSnapImg(erdHistNo);
+	}
+
+	@Override
+	public String selectErdJson(int erdHistNo) {
+		return erdDrawingDao.selectErdJson(erdHistNo);
 	}
 
 }

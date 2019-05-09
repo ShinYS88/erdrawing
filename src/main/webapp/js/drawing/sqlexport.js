@@ -49,9 +49,9 @@
  			if(domain == ''){
  				 domain = 'VARCHAR(255)'; //''일 때 varchar2로 먹임
  				}
- 			
+ 			//asdasdasdas
  		var nullable = column[5].children[2].attrs.text;
- 		var defaultValue = column[6].children[2].attrs.text;
+ 		var defaultValue = column[6].children[2].text();
  		if(defaultValue != ''){
  			defaultValue = space+'DEFAULT  ' + defaultValue;
  		}
@@ -68,7 +68,7 @@
 			for(var i =0; i<columns.length; i++){
 			var column = columns[i].find('.attr_groups');
 				
-	 		var comment = column[7].children[2].attrs.text;
+	 		var comment = column[7].children[2].text();
 	 		//
 	 		if(comment != ''){
 	 			var key = column[2].children[2].attrs.text;

@@ -72,7 +72,7 @@ $(document).ready(function(){
 	
 	var content_padding_b = parseInt($("#contents .container").css('padding-bottom'));
 	var footer = $("#footer").height();
-	var s_flag = true;
+	var s_flag = true; 
 	
     $(window).scroll(function(){
     		

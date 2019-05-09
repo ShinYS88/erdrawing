@@ -114,4 +114,9 @@ public class TicketServiceImpl implements ITicketService{
 	public List<Map<String, Object>> selectTicketBuyList(String ticketBuyNo) {
 		return ticketDao.selectTicketBuyList(ticketBuyNo);
 	}
+
+	@Override
+	public int getUsingTicketCnt(String memId) {
+		return ticketDao.getUsingTicketCnt(memId);
+	}
 }

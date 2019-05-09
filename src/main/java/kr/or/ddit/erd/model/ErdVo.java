@@ -17,19 +17,10 @@ public class ErdVo {
 	private String erdImg;
 	private String orderKind;	// 정렬종류
 	private int likeCnt; 		// 좋아요 수
-	private int erdCnt; 		// 임의 갯수
 	
 	public ErdVo() {
 	}
 	
-	public int getErdCnt() {
-		return erdCnt;
-	}
-
-	public void setErdCnt(int erdCnt) {
-		this.erdCnt = erdCnt;
-	}
-
 
 	public int getErdNo() {
 		return erdNo;
@@ -135,7 +126,7 @@ public class ErdVo {
 		return "ErdVo [erdNo=" + erdNo + ", erdTitle=" + erdTitle + ", erdScope=" + erdScope + ", erdReadCnt="
 				+ erdReadCnt + ", erdCDt=" + erdCDt + ", erdUDt=" + erdUDt + ", erdColor=" + erdColor + ", memId="
 				+ memId + ", teamNo=" + teamNo + ", erdImg=" + erdImg + ", orderKind=" + orderKind + ", likeCnt="
-				+ likeCnt + ", erdCnt=" + erdCnt + "]";
+				+ likeCnt + "]";
 	}
 
 }

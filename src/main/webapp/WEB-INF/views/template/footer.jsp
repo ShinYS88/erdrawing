@@ -13,8 +13,9 @@
             <h4>ERDrawing</h4>
             <h4> <a href="${cp }/chatbot/chatbot" style="cursor: pointer;">1:1 Chatting</a></h4>
             
-            <li>Library</li>
-            <li>Privacy Policy</li>
+<!--             <li>Library</li> -->
+            
+<!--             <li>Privacy Policy</li> -->
             
         </div>
         
@@ -29,7 +30,7 @@
         </div>
         
         
-        <div class="copyright col-sm-12">copyright(c) kr.or.ddit all right reserved.</div>
+        <div class="copyright col-sm-12">copyright(c) 그려조 all right reserved.</div>
 
 
     </div>

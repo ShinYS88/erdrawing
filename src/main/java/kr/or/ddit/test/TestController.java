@@ -221,8 +221,7 @@ public class TestController {
 		switch(value){
 			case "erdAdd":
 				page = "erd/erdadd";
-				break;
-				
+				break;	
 			case "createTeam":
 				page = "erd/teamCreate";
 				break;

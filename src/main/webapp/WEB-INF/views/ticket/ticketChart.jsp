@@ -6,7 +6,7 @@
 .page-header {
     padding-bottom: 9px;
     margin: 40px 0 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #eee;
 }
 .navbar-brand1 {
     float: left;
@@ -19,7 +19,7 @@
     padding: 3px;
 }
 </style>
-<br/><br/>
+
 <div class="navbar-header" style="padding-right: 10px;">
 	<ul class="left-menu1" style="margin-top: 100px; color: #D1D1D2;">
 		<li class="navbar-brand1" style="font-size: 18px; font-weight: bold;"><a href="/ticket/ticketChart" >Total Sales</a></li>
@@ -28,10 +28,11 @@
 	<ul class="left-menu1" style="color: #D1D1D2;">
 		<li class="navbar-brand1" style="font-size: 18px; font-weight: bold;"><a href="/ticket/ticketPie?yyyy=2019">Sales by Product</a></li>
 	</ul>
+	
 </div>
-<br/><br/><br/>	
+	<div style="text-align: center;"><h3 class="page-header" style="color: #D1D1D2;">전체 매출 현황</h3></div>
+<br/>
 <div id="chartContainer" style="height: 450px; width: 87%;"></div>
-
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
 
@@ -41,13 +42,17 @@
 		var dps =[[],[],[],[],[],[],[],[],[],[],[],[]];
 		var dps2 =[[],[],[],[],[],[],[],[],[],[],[],[]];
 		var dps3 =[[],[],[],[],[],[],[],[],[],[],[],[]];
-		//var dps3 =new Array();
+		
 		var chart = new CanvasJS.Chart("chartContainer", {
 			animationEnabled : true,
 			theme : "dark2", //light2
 			title : {
 				text : "Total Sales"
 			},
+			data :{
+				name:"test"
+			},
+			
 			axisX : {
 				valueFormatString : "MMM YYYY",
 				intervalType : "month",
@@ -57,6 +62,7 @@
 					snapToDataPoint : true
 				}
 			},
+			
 			axisY : {
 				title : "Sales Amount",
 				crosshair : {
@@ -73,9 +79,10 @@
 				dockInsidePlotArea: true,
 				itemclick: toogleDataSeries
 			},
+			
 			data : [ {
 				type : "line",
-				name: "6개월권",
+				name: "${nameList.get(0)}",
 				showInLegend : dps2[0],
 				xValueType : "dateTime",
 				markerType : "square",
@@ -107,18 +114,17 @@
 
 			} ,
 			
+			
 			{
 				type : "line",
 				xValueType : "dateTime",
-				name: "권",
-				showInLegend : true,
+				name: "5개월권",
+				showInLegend : true, 
 				markerType : "square",
 				xValueFormatString : "MMM, YYYY",
 				dataPoints : dps[3]
 
 			} ,
-			
-			
 			
 			]
 		});
@@ -131,7 +137,6 @@
 		
 		
 		<c:forEach items="${ticketBuyHistList}" var="ticket" varStatus="i">
-		console.log("${ticketBuyHistList}")
 		<c:forEach items="${dataPointsList}" var="dataPoints" varStatus="loop">
 		<c:forEach items="${dataPoints}" var="dataPoint">
 		
@@ -154,8 +159,9 @@
 		</c:forEach>
 		</c:forEach>
 		</c:forEach>
-		
 
+		
+		
 		chart.render();
 
 		$(".canvasjs-chart-credit").html("");

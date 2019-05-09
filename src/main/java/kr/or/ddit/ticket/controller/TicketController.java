@@ -29,6 +29,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +42,7 @@ import kr.or.ddit.ticket.model.TicketRefHistVo;
 import kr.or.ddit.ticket.model.TicketVo;
 import kr.or.ddit.ticket.service.ITicketService;
 import kr.or.ddit.util.model.PageVo;
+
 
 @RequestMapping("/ticket")
 @Controller
@@ -175,7 +177,16 @@ public class TicketController {
 			modelMap.addAttribute("dataPointsList", canvasjsDataList);
 			logger.debug("====list{}", canvasjsDataList);
 		}
+		
+		List<TicketVo> List = ticketService.getAllTicketList();
+		 List<String> nameList = new ArrayList<>();
+		if(List != null){
+		for(int i=0; i<List.size(); i++){
+			nameList.add(List.get(i).getTicketContent());
+			}
+		} 
 		model.addAttribute("ticketBuyHistList", ticketService.getAllTicketList());
+		model.addAttribute("nameList", nameList);
 
 		return "ticketChart";
 	}
@@ -319,7 +330,7 @@ public class TicketController {
 		 vo.setTicketFee(ticketService.selectTicket(ticketNo+"").getTicketPrice());
 		 ticketService.insertticketBuyHist(vo);
 		 
-		 ra.addFlashAttribute("msg", "결제가 완료되었습니다~");
+		 ra.addFlashAttribute("msg", "결제가 완료되었습니다.");
 		 }
 			return "redirect:" + req.getContextPath() + "/ticket/ticketList";
 	 }
@@ -334,8 +345,11 @@ public class TicketController {
 		PageVo paging= new PageVo();
 		 paging.setPageNo(page);
 		 paging.setPageSize(10);
+		 if(ticketService.getAllTicketRefList(map).size()>0){
 		 int cnts = Integer.valueOf((String) ticketService.getAllTicketRefList(map).get(0).get("CNT"));
 		 paging.setTotalCount(cnts);
+		 }
+		
 		 model.addAttribute("ticketList", ticketService.getAllTicketList());
 		 model.addAttribute("ticketRefList", ticketService.getAllTicketRefList(map));
 		 model.addAttribute("paging", paging);

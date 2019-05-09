@@ -36,5 +36,75 @@
 <script src="/js/drawing/drawingAjax.js"></script>
 <script src="/js/drawing/chat.js"></script>
 
+<script>
+$(document).ready(function(){
+	
+	//본인이 아니면 버튼 이벤트 없애기
+	if(erdCreator != S_userId2 && erdScope != 'team'){
+
+		 $('#button3').off('click');		//엔티티추가
+		 $('#tmp_btn_11').off('click');
+		 $('#tmp_btn_12').off('click');
+		 $('#tmp_btn_13').off('click');
+		 $('#tmp_btn_14').off('click');
+		 $('#tmp_btn_15').off('click');
+		 $('#one2many').off('click');
+		 $('#one2one').off('click');
+		 $('#button30').off('click');	//도메인
+		 $('#button31').off('click');	//가져오기
+		 
+		 $('#button40').off('click');	
+		 $('#button41').off('click');	
+		 
+		 $('#erdModify').off('click');
+
+		 $('#erdModify, #button41, #button40, #button30, #button31').css('color','#999999');
+		 $('#button3, #tmp_btn_11, #tmp_btn_12, #tmp_btn_13, #tmp_btn_14, #tmp_btn_15, #one2many, #one2one').css('opacity','0.5');
+		 $('#erdModify, #button41, #button40, #button30, #button31').css('cursor','not-allowed');
+		 $('#button3, #tmp_btn_11, #tmp_btn_12, #tmp_btn_13, #tmp_btn_14, #tmp_btn_15, #one2many, #one2one').css('cursor','not-allowed');
+		 
+		 stage.off('click');
+		 stage.off('.dragSetup');
+		 stage.find('.entity').draggable(false);
+	}
+
+});
+
+
+$("#logout").on("click", function() {
+	console.log("로그아웃 클릭");
+	if (S_email === "google") {
+					abc = window.open('https://accounts.google.com/logout',
+							'ot', 'width=300,height=300,left=650,top=300');
+
+					setTimeout(function() {
+						abc.close();
+						window.location.href = '/logout';
+					}, 1500);
+				}	//구글로그인한 경우
+
+	else if (S_email === "kakao") {
+		 Kakao.init('8eded83f4085ba344e793801d05f3722');
+	     Kakao.API.request({
+	          url: '/v1/user/unlink',
+	       //   /v1/api/talk/profile
+	          success: function(res) {
+		            alert("로그아웃");
+		            location.href = '/logout';
+		          },
+	          fail: function(error) {
+	            alert("로그인 실패");
+	          }
+	        });
+	}
+
+	else {
+		location.href = '/logout';
+	}//기본 로그인한 경우
+});
+
+
+</script>
+
 </body>
 </html>

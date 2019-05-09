@@ -230,7 +230,7 @@ margin-left: 7%;}
 			});
 		
 		$("#joinBtn").on("click",function(){
-			if(scrollValue+150>divHeight && scrollValue2+150>divHeight2){
+			if($("#joinBtn").prop("disabled", false)){
 				$("#frm").submit();
 			}else{
 				alert("정보를 다 읽어야합니다.");

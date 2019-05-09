@@ -68,16 +68,16 @@ background-color:rgba(224, 51, 122,1);
 					<label>공유</label>
 					<div>
 						<div>
-							<input type="radio" name="erdScope" value="public" checked="checked">
-							<label>Public</label>
+							<input type="radio" name="erdScope" value="public">
+							<label>공개</label>
 						</div>
 						<div>
 							<input type="radio" name="erdScope" value="private">
-							<label>Private</label>
+							<label>비공개</label>
 						</div>
 						<div>
-							<input type="radio" name="erdScope" value="team">
-							<label>Team</label>
+							<input type="radio" name="erdScope" value="team" checked="checked">
+							<label>팀</label>
 							
 						</div>
 					</div>
@@ -100,8 +100,14 @@ background-color:rgba(224, 51, 122,1);
 			</div>
 		</div>
 		<script>
-			var clickTeam = false;	
-			$("#selTeam").hide();
+// 			var clickTeam = false;	
+// 			$("#selTeam").hide();
+
+				$("#selTeam").show();
+			    	clickTeam = true;
+
+			    	$('select[name="teamNo"]').val(getTeamNo);
+			    	
 			
 			$("#erdAdd").on("click", function(){
 				var selTeam = $("select[name=teamNo]").val();

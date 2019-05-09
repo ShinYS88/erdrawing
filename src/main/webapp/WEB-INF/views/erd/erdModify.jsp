@@ -89,15 +89,15 @@ background-color:rgba(224, 51, 122,1);
 				<div style="display:inline-block;">
 					<div>
 						<input type="radio" name="erdScope" value="public">
-						<label>공개</label>
+						<label>Public</label>
 					</div>
 					<div>
 						<input type="radio" name="erdScope" value="private">
-						<label>비공개</label>
+						<label>Private</label>
 					</div>
 					<div>
 						<input type="radio" name="erdScope" value="team">
-						<label>팀</label>
+						<label>Team</label>
 					</div>
 				</div>
 			</div>

@@ -23,7 +23,8 @@
 	 	update ticket
 	 		set ticketPrice =#{ticketPrice, jdbcType=VARCHAR},
 	 			ticketImg =#{ticketImg, jdbcType=VARCHAR},
-	 			ticketContent=#{ticketContent, jdbcType=VARCHAR}
+	 			ticketContent=#{ticketContent, jdbcType=VARCHAR},
+	 			ticketPeriod=#{ticketPeriod, jdbcType=VARCHAR}
 	 	where ticketNo=#{ticketNo}
 	 </update>
 	 
@@ -223,5 +224,21 @@
                             a.ticketno=b.ticketno
 	 </select>
 	 
-	 
+	 <!-- 사용중인 티켓 수 -->
+	 <select id="getUsingTicketCnt" parameterType="String" resultType="int">
+	 	select  a.num-b.num2 as  cnt
+	    from (  select count(*) as num
+	           from
+	               ( select *
+	                 from ticket_buy_hist
+	                 where memId= #{memId})a
+	         )a,            
+	         (select count(*) as num2
+	          from
+	            (select a.TICKETBUYNO
+	             from ticket_buy_hist a, TICKET_REF_HIST b 
+	             where a.ticketbuyNo = b.ticketbuyNo 
+	                   and a.memId =#{memId}) a
+	          )b
+	 </select>
 </mapper>

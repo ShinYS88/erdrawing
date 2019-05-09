@@ -98,7 +98,7 @@
 						<c:forEach var="teamList" items="${teamInfoList }">
 							<li class="team-li">
 							<a href="/team?teamNo=${teamList.teamNo }">
-								<div>${fn:toUpperCase(fn:substring(teamList.teamNm,0,1 ))}</div>
+								<div class="bg-box1">${fn:toUpperCase(fn:substring(teamList.teamNm,0,1 ))}</div>
 								<span>${teamList.teamNm }</span>
 							</a></li>
 						</c:forEach>
@@ -218,6 +218,9 @@
 // 		alert($("#alertMsg").val());
 // 		$("#alertMsg").val("");
 // 	} 
+
+
+
 
 </script>
 
