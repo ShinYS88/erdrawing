@@ -1,6 +1,6 @@
 # Erdrawing
 
-Web브라우저에서 UI조작방식으로 ERD를 설계하는 웹애플리케이션 입니다.
+Web브라우저에서 UI조작방식으로 ERD를 설계하는 웹 애플리케이션 입니다.
 ***
 * Language : Java, JSP, HTML5, CSS3, json, JavaScript, Ajax
 * Framework : Spring, mybatis, Tiles, log4j, jackson, jQuery
