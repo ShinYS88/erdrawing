@@ -15,10 +15,10 @@ Web브라우저에서 UI조작방식으로 ERD를 설계하는 웹 애플리케�
 <a href="https://www.youtube.com/embed/aBoIKR6gtnU" target="_blank"><img src="https://i.imgur.com/ZDQ1BAL.png" alt="IMAGE ALT TEXT HERE" width="600" border="10" /></a>
 
 <h2>프로젝트 요약</h2>
-Web상에서 UI조작으로 엔티티,키,속성,관계 등을 조작하여 ERD설계 할 수 있는 웹 서비스<br>
-설치 없이 브라우저에서 간편하게 작업<br>
-작업한 ERD를 여러 사람과 공유<br>
-ERD 형상관리<br>
+<h3>Web상에서 UI조작으로 엔티티,키,속성,관계 등을 조작하여 ERD설계 할 수 있는 웹 서비스</h3>
+ - 설치 없이 브라우저에서 간편하게 작업<br>
+ - 작업한 ERD를 여러 사람과 공유<br>
+ - ERD 형상관리<br>
 <br>
 
  - 내보내기 기능으로 설계한 ERD 쿼리를 추출 하여 db구축에 사용가능
