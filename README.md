@@ -2,7 +2,11 @@
 
 Web브라우저에서 UI조작방식으로 ERD를 설계하는 웹애플리케이션 입니다.
 ***
-* JAVA, jsp, Spring Framework, canvas, konva.js, websocket, Junit, etc...
+* Language : Java, JSP, HTML5, CSS3, json, JavaScript, Ajax
+* Framework : Spring, mybatis, Tiles, log4j, jackson, jQuery
+* Library & API : junit, JSTL, canvas, websocket, JavaMail, kakaoDevelopers, googleDevelopers, reCAPTCHA, Chart.js, IBM Watson
+* Tools : STS,  SQL Developer, Maven, exERD, Apache Tomcat
+* GitLab, redmine
 * Erdcloud BenchMarking
 * 대덕인재개발원 Team Project
 * 2019.3.15 ~ 2019.5.10
